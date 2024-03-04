@@ -25,10 +25,10 @@ import type { MetadataObject } from '@/utils/types/metadata';
 
 const App = () => {
   const [files, setFiles] = useState<ExtFile[]>([]);
-  const [jsonData, setJsonData] = useState<MetadataObject[]>([]);
-  console.log('jsonData:', jsonData);
+  const [metadata, setMetadata] = useState<MetadataObject[]>([]);
+  console.log('metadata:', metadata);
 
-  const handleFilesChange = (extFile: ExtFile) => {
+  const readFile = (extFile: ExtFile) => {
     if (extFile.file) {
       const reader = new FileReader();
       reader.readAsText(extFile.file);
@@ -37,10 +37,10 @@ const App = () => {
           const text = event.target.result as string;
           try {
             const json = JSON.parse(text) as MetadataObject;
-            setJsonData([json]);
+            setMetadata([json]);
           } catch (err) {
             console.error(dictionary.errors.parsingError(extFile.name, err as string));
-            setJsonData([]);
+            setMetadata([]);
           }
         }
       };
@@ -53,7 +53,7 @@ const App = () => {
 
   useEffect(() => {
     if (files.length > 0) {
-      handleFilesChange(files[0]);
+      readFile(files[0]);
     }
   }, [files]);
 
