@@ -18,56 +18,43 @@
  *
  */
 import { useEffect, useState } from 'react';
-import type { ExtFile } from '@dropzone-ui/react';
 import { Dropzone, FileMosaic } from '@dropzone-ui/react';
+import type { ExtFile } from '@dropzone-ui/react';
 import { dictionary } from '@/libs/en';
 import type { MetadataObject } from '@/utils/types/metadata';
 
 const App = () => {
   const [files, setFiles] = useState<ExtFile[]>([]);
   const [jsonData, setJsonData] = useState<MetadataObject[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  console.log('files:', files);
   console.log('jsonData:', jsonData);
-  console.log('error:', error);
 
-  const handleFilesChange = (incomingFiles: ExtFile[]) => {
-    incomingFiles.forEach((extFile) => {
-      if (extFile.file) {
-        const reader = new FileReader();
-        reader.readAsText(extFile.file);
-        reader.onload = (event: ProgressEvent<FileReader>) => {
-          if (event.target?.result) {
-            const text = event.target.result as string;
-            try {
-              const json = JSON.parse(text) as MetadataObject;
-              if (!jsonData.some((data) => JSON.stringify(data) === JSON.stringify(json))) {
-                setJsonData((prev) => [...prev, json]);
-              } else {
-                setError(dictionary.errors.duplicateFile(extFile.name));
-              }
-            } catch (err) {
-              setError(dictionary.errors.parsingError(extFile.name, err as string));
-            }
+  const handleFilesChange = (extFile: ExtFile) => {
+    if (extFile.file) {
+      const reader = new FileReader();
+      reader.readAsText(extFile.file);
+      reader.onload = (event: ProgressEvent<FileReader>) => {
+        if (event.target?.result) {
+          const text = event.target.result as string;
+          try {
+            const json = JSON.parse(text) as MetadataObject;
+            setJsonData([json]);
+          } catch (err) {
+            console.error(dictionary.errors.parsingError(extFile.name, err as string));
+            setJsonData([]);
           }
-        };
-      }
-    });
+        }
+      };
+    }
   };
 
-  const updateFiles = (incomingFiles: ExtFile[]) => {
-    const newFiles = incomingFiles.filter((incomingFile) => !files.some((existingFile) => existingFile.name === incomingFile.name));
-    setFiles((prevFiles) => [...prevFiles, ...newFiles]);
-  };
-
-  const removeFiles = () => {
-    setFiles([]);
-    setJsonData([]);
-    setError(null);
+  const updateFilesReplace = (incommingFiles: ExtFile[]) => {
+    setFiles(incommingFiles);
   };
 
   useEffect(() => {
-    handleFilesChange(files);
+    if (files.length > 0) {
+      handleFilesChange(files[0]);
+    }
   }, [files]);
 
   return (
@@ -76,25 +63,17 @@ const App = () => {
       <p className="mb-10 text-center font-semibold leading-7 [&:not(:first-child)]:mt-6">{dictionary.header.description}</p>
       <div className="relative flex flex-col justify-center">
         <Dropzone
-          onChange={updateFiles}
-          value={files}
+          onChange={updateFilesReplace}
           accept="application/json"
           autoClean
           header={false}
+          footer={false}
           label={dictionary.dropzone.description}
-          actionButtons={{
-            position: 'before',
-            deleteButton: {
-              label: 'Remove files',
-              onClick: () => {
-                removeFiles();
-              },
-            },
-          }}
+          behaviour="replace"
+          max={1}
+          style={{ fontFamily: 'Roboto' }}
         >
-          {files.map((file: ExtFile) => (
-            <FileMosaic key={file.id} {...file} valid={undefined} />
-          ))}
+          {files.length > 0 && files.map((file) => <FileMosaic key={file.id} {...file} valid={undefined} style={{ fontFamily: 'Roboto' }} />)}
         </Dropzone>
       </div>
     </div>

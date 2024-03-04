@@ -19,7 +19,7 @@
  */
 export const dictionary = {
   header: { title: 'Metadata Assistant', description: 'Upload either a CSV file or a directory of JSONs...' },
-  dropzone: { description: 'Drop files to validate them' },
+  dropzone: { description: 'Drop file to validate' },
   errors: {
     jsonFileUpload: 'Error during processing the JSON file',
     duplicateFile: (fileName?: string) => `Duplicate file detected: ${fileName}`,
