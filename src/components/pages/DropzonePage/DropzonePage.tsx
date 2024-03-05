@@ -23,6 +23,12 @@ import type { ExtFile } from '@dropzone-ui/react';
 import JSZip from 'jszip';
 // TODO - local import only for temporary testing purposes
 // eslint-disable-next-line no-restricted-imports
+import type { FileValidationResult } from '../../../../../hedera-nft-utilities/src/hip412-validator/index';
+// TODO - local import only for temporary testing purposes
+// eslint-disable-next-line no-restricted-imports
+import { Hip412Validator } from '../../../../../hedera-nft-utilities/src/hip412-validator/index';
+// TODO - local import only for temporary testing purposes
+// eslint-disable-next-line no-restricted-imports
 import type { MetadataObject } from '../../../../../hedera-nft-utilities/src/types/csv';
 import { supportedFileTypes } from '@/components/pages/DropzonePage/supportedFileTypes';
 import { dictionary } from '@/libs/en';
@@ -34,28 +40,38 @@ export default function DropzonePage() {
   const [metadata, setMetadata] = useState<MetadataObject[]>([]);
   const [error, setError] = useState<string>('');
   console.log('error:', error);
-  console.log('files:', files);
+  const [validationResponse, setValidationResponse] = useState<FileValidationResult>();
+  console.log('validationResponse:', validationResponse);
   console.log('metadata:', metadata);
 
   const readFile = async (extFile: ExtFile) => {
     setMetadata([]);
     setError('');
+    const emptyJsonFiles: string[] = [];
+
     if (!extFile.file) return;
     if (extFile.file.type === 'application/zip' || extFile.file.name.endsWith('.zip')) {
       const zip = new JSZip();
       const content = await zip.loadAsync(extFile.file);
       const jsonFiles = Object.keys(content.files).filter((fileName) => fileName.endsWith('.json'));
+
       for (const fileName of jsonFiles) {
         const file = content.file(fileName);
         if (file) {
-          const fileData = await file.async('string');
-          try {
-            const json = JSON.parse(fileData) as MetadataObject;
-            setMetadata((prevMetadata) => [...prevMetadata, json]);
-          } catch (err) {
-            console.error(dictionary.errors.parsingError(fileName, err as string));
-            setMetadata([]);
-            setError(formatErrorMessage(err));
+          const fileData = (await file.async('string')).trim();
+
+          if (fileData) {
+            try {
+              const json = JSON.parse(fileData) as MetadataObject;
+              setMetadata((prevMetadata) => [...prevMetadata, json]);
+            } catch (err) {
+              console.error(dictionary.errors.parsingError(fileName, err as string));
+              setMetadata([]);
+              setError(formatErrorMessage(err));
+            }
+          } else {
+            emptyJsonFiles.push(fileName.split('/').pop()!);
+            setError(dictionary.errors.emptyJsonFiles(emptyJsonFiles));
           }
         }
       }
@@ -73,6 +89,8 @@ export default function DropzonePage() {
             setMetadata([]);
             setError(formatErrorMessage(err));
           }
+        } else {
+          setError(dictionary.errors.jsonFileEmpty);
         }
       };
     } else if (extFile.file.type.includes('csv') || extFile.file.name.endsWith('.csv')) {
@@ -98,6 +116,13 @@ export default function DropzonePage() {
       void readFile(files[0]);
     }
   }, [files]);
+
+  useEffect(() => {
+    if (metadata.length > 0) {
+      const validationResponse: FileValidationResult = Hip412Validator.validateArrayOfObjects(metadata);
+      setValidationResponse(validationResponse);
+    }
+  }, [metadata]);
 
   return (
     <div className="container mx-auto">

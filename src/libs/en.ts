@@ -23,6 +23,8 @@ export const dictionary = {
   errors: {
     unknownError: 'Unknown error occurred',
     jsonFileUpload: 'Error during processing the JSON file',
+    emptyJsonFiles: (emptyFiles: string[]) => `Empty JSON ${emptyFiles.length > 1 ? 'files' : 'file'} detected and skipped: ${emptyFiles.join(', ')}`,
+    jsonFileEmpty: 'This json file is empty and it will be skipped',
     duplicateFile: (fileName?: string) => `Duplicate file detected: ${fileName}`,
     parsingError: (fileName: string | undefined, err: string) => `Error parsing JSON from file ${fileName}: ${err}`,
     unsupportedFileType: 'This file type is unsupported',
