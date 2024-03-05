@@ -1,5 +1,5 @@
 {
-  "name": "token-holders-list",
+  "name": "metadata-assistant",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -20,6 +20,7 @@
     "jszip": "^3.10.1",
     "lucide-react": "^0.341.0",
     "next-themes": "^0.2.1",
+    "papaparse": "^5.4.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tailwind-merge": "^2.2.1",
@@ -29,6 +30,7 @@
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "^5.8.4",
     "@types/node": "^20.11.20",
+    "@types/papaparse": "^5.3.14",
     "@types/react": "^18.2.56",
     "@types/react-dom": "^18.2.19",
     "@typescript-eslint/eslint-plugin": "^7.0.2",
