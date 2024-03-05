@@ -79,9 +79,9 @@ export default function DropzonePage() {
           label={dictionary.dropzone.description}
           behaviour="replace"
           max={1}
-          style={{ fontFamily: 'Roboto' }}
+          className="dropzone-label"
         >
-          {files.length > 0 && files.map((file) => <FileMosaic key={file.id} {...file} valid={undefined} style={{ fontFamily: 'Roboto' }} />)}
+          {files.length > 0 && files.map((file) => <FileMosaic key={file.id} {...file} valid={undefined} className="dropzone-label" />)}
         </Dropzone>
       </div>
     </div>

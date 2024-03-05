@@ -12,6 +12,10 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily: {
+        // TODO: delete all unused fonts from public folder
+        geistRegular: ['Geist-Regular', 'sans-serif'],
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
