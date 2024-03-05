@@ -83,6 +83,10 @@
 
 @layer components {
   .dropzone-label {
-    @apply font-geistRegular
+    @apply font-geistRegular cursor-pointer
+  }
+
+  .dropzone-label label {
+    @apply cursor-pointer border px-7 py-4 bg-slate-500 text-white rounded-lg
   }
 }

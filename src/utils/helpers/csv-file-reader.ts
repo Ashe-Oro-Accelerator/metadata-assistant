@@ -25,7 +25,7 @@ import { prepareMetadataObjectsFromCSVRows } from '../../../../hedera-nft-utilit
 // TODO - local import only for temporary testing purposes
 // eslint-disable-next-line no-restricted-imports
 import type { MetadataObject } from '../../../../hedera-nft-utilities/src/types/csv';
-import { dictionary } from '@/libs/en';
+import { formatErrorMessage } from '@/utils/helpers/formatErrorMessage';
 import type { CSVRow } from '@/utils/types/csv';
 // import type { MetadataObject } from '@/utils/types/metadata';
 
@@ -116,20 +116,14 @@ export class CSVFileReader {
           },
         });
       } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : dictionary.errors.unknownError;
-        reject(new Error(errorMessage));
+        reject(new Error(formatErrorMessage(error)));
       }
     });
   }
 
   static async convertCSVRowsToMetadataObjects(extFile: ExtFile) {
-    try {
-      const csvParsedRows: CSVRow[] = await CSVFileReader.readCSVFromFile(extFile);
-      const metadataObjects: MetadataObject[] = prepareMetadataObjectsFromCSVRows({ csvParsedRows });
-      return metadataObjects;
-    } catch (error) {
-      console.error(error);
-      return [];
-    }
+    const csvParsedRows: CSVRow[] = await CSVFileReader.readCSVFromFile(extFile);
+    const metadataObjects: MetadataObject[] = prepareMetadataObjectsFromCSVRows({ csvParsedRows });
+    return metadataObjects;
   }
 }

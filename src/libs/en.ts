@@ -19,11 +19,12 @@
  */
 export const dictionary = {
   header: { title: 'Metadata Assistant', description: 'Upload either a CSV file or a directory of JSONs...' },
-  dropzone: { description: 'Drop file to validate' },
+  dropzone: { description: 'Upload a file' },
   errors: {
     unknownError: 'Unknown error occurred',
     jsonFileUpload: 'Error during processing the JSON file',
     duplicateFile: (fileName?: string) => `Duplicate file detected: ${fileName}`,
     parsingError: (fileName: string | undefined, err: string) => `Error parsing JSON from file ${fileName}: ${err}`,
+    unsupportedFileType: 'This file type is unsupported',
   },
 } as const;

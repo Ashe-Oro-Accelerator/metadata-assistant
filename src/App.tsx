@@ -17,7 +17,7 @@
  * limitations under the License.
  *
  */
-import DropzonePage from '@/DropzonePage';
+import DropzonePage from '@/components/pages/DropzonePage/DropzonePage';
 import { Layout } from '@/Layout';
 
 const App = () => {
