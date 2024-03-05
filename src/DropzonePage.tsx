@@ -20,15 +20,11 @@
 import { useEffect, useState } from 'react';
 import { Dropzone, FileMosaic } from '@dropzone-ui/react';
 import type { ExtFile } from '@dropzone-ui/react';
-import Papa from 'papaparse';
+// TODO - local import only for temporary testing purposes
 // eslint-disable-next-line no-restricted-imports
-// import { parseCSVRowsToMetadataObjects } from '../../hedera-nft-utilities/src/nftSDKFunctions/parse-csv-rows-to-metadata-objects';
+import type { MetadataObject } from '../../hedera-nft-utilities/src/types/csv';
 import { dictionary } from '@/libs/en';
-import type { CSVRow } from '@/utils/types/csv';
-import type { MetadataObject } from '@/utils/types/metadata';
-
-const ATTRIBUTES = 'attributes';
-const PROPERTIES = 'properties';
+import { CSVFileReader } from '@/utils/helpers/csv-file-reader';
 
 export default function DropzonePage() {
   const [files, setFiles] = useState<ExtFile[]>([]);
@@ -36,7 +32,7 @@ export default function DropzonePage() {
   console.log('files:', files);
   console.log('metadata:', metadata);
 
-  const readFile = (extFile: ExtFile) => {
+  const readFile = async (extFile: ExtFile) => {
     if (!extFile.file) return;
     if (extFile.file.type === 'application/json' || extFile.file.name.endsWith('.json')) {
       const reader = new FileReader();
@@ -54,47 +50,8 @@ export default function DropzonePage() {
         }
       };
     } else if (extFile.file.type.includes('csv') || extFile.file.name.endsWith('.csv')) {
-      try {
-        Papa.parse<CSVRow>(extFile.file, {
-          header: true,
-          skipEmptyLines: true,
-          transformHeader(header) {
-            console.log('header:', header);
-            let propertyIndex = 0;
-            let attributesIndex = 0;
-            let currentType = null;
-
-            if (header === ATTRIBUTES) {
-              currentType = ATTRIBUTES;
-              attributesIndex++;
-            } else if (header === PROPERTIES) {
-              currentType = PROPERTIES;
-              propertyIndex = 1;
-            }
-
-            if (currentType === PROPERTIES) {
-              return `${PROPERTIES}_${propertyIndex++}`;
-            }
-
-            if (currentType === ATTRIBUTES) {
-              return `${ATTRIBUTES}_${attributesIndex++}`;
-            }
-
-            return header;
-          },
-
-          complete: (result: Papa.ParseResult<CSVRow>) => {
-            const csvRows: CSVRow[] = result.data;
-            console.log('csvRows:', csvRows);
-
-            // const metadataObjects: MetadataObject[] = parseCSVRowsToMetadataObjects(csvRows, 'attributes', 'properties');
-            // console.log('metadataObjects:', metadataObjects);
-          },
-        });
-      } catch (err) {
-        console.error(dictionary.errors.parsingError(extFile.name, err as string));
-        setMetadata([]);
-      }
+      const metadataObjects: MetadataObject[] = await CSVFileReader.convertCSVRowsToMetadataObjects(extFile);
+      setMetadata(metadataObjects);
     }
   };
 
@@ -104,7 +61,7 @@ export default function DropzonePage() {
 
   useEffect(() => {
     if (files.length > 0) {
-      readFile(files[0]);
+      void readFile(files[0]);
     }
   }, [files]);
 
