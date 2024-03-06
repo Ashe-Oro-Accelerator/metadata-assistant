@@ -28,5 +28,7 @@ export const dictionary = {
     duplicateFile: (fileName?: string) => `Duplicate file detected: ${fileName}`,
     parsingError: (fileName: string | undefined, err: string) => `Error parsing JSON from file ${fileName}: ${err}`,
     unsupportedFileType: 'This file type is unsupported',
+    noFileProvided: 'No file provided',
+    zipFileWithoutJsonFiles: 'This zip file does not contain json files.',
   },
 } as const;
