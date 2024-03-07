@@ -29,6 +29,9 @@ dependencies:
   file-type:
     specifier: ^19.0.0
     version: 19.0.0
+  hedera-nft-utilities:
+    specifier: ../hedera-nft-utilities
+    version: link:../hedera-nft-utilities
   jszip:
     specifier: ^3.10.1
     version: 3.10.1

@@ -26,7 +26,8 @@
     "react-dom": "^18.2.0",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
-    "vite-tsconfig-paths": "^4.2.1"
+    "vite-tsconfig-paths": "^4.2.1",
+    "hedera-nft-utilities": "../hedera-nft-utilities"
   },
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "^5.8.4",

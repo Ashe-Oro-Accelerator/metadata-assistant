@@ -1,6 +1,6 @@
 /*-
  *
- * Hedera NFT Utilities
+ * Hedera Metadata Assistant
  *
  * Copyright (C) 2024 Hedera Hashgraph, LLC
  *
@@ -18,112 +18,104 @@
  *
  */
 import type { ExtFile } from '@dropzone-ui/react';
+import type { MetadataObject, CSVRow } from 'hedera-nft-utilities';
+import { prepareMetadataObjectsFromCSVRows } from 'hedera-nft-utilities/src/file-management/prepare-metadata-objects-from-csv-rows';
 import Papa from 'papaparse';
-// TODO - local import only for temporary testing purposes
-// eslint-disable-next-line no-restricted-imports
-import { prepareMetadataObjectsFromCSVRows } from '../../../../hedera-nft-utilities/src/nftSDKFunctions/prepare-metadata-objects-from-csv-rows';
-// TODO - local import only for temporary testing purposes
-// eslint-disable-next-line no-restricted-imports
-import type { MetadataObject } from '../../../../hedera-nft-utilities/src/types/csv';
+import { dictionary } from '@/libs/en';
 import { formatErrorMessage } from '@/utils/helpers/formatErrorMessage';
-import type { CSVRow } from '@/utils/types/csv';
-// import type { MetadataObject } from '@/utils/types/metadata';
 
 type CurrentType = 'attributes' | 'properties' | null;
 
 const ATTRIBUTES = 'attributes';
 const PROPERTIES = 'properties';
 
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class
-export class CSVFileReader {
-  private static processHeader(
-    header: { header: string; index: number },
-    currentType: CurrentType,
-    propertyIndex: number,
-    attributesIndex: number,
-  ): {
-    result: string | null;
-    currentType: CurrentType;
-    propertyIndex: number;
-    attributesIndex: number;
-  } {
-    let result: string | null = null;
-    if (header.header === ATTRIBUTES) {
-      currentType = ATTRIBUTES;
-      attributesIndex++;
-    } else if (header.header === PROPERTIES) {
-      currentType = PROPERTIES;
-      propertyIndex = 1;
-    } else if (!currentType) {
-      return { result: header.header, currentType, propertyIndex, attributesIndex };
-    }
-
-    if (currentType === PROPERTIES) {
-      result = `${PROPERTIES}_${propertyIndex}`;
-      propertyIndex++;
-    }
-
-    if (currentType === ATTRIBUTES) {
-      result = `${ATTRIBUTES}_${attributesIndex}`;
-      attributesIndex++;
-    }
-
-    return { result, currentType, propertyIndex, attributesIndex };
+const processHeader = (
+  header: { header: string; index: number },
+  currentType: CurrentType,
+  propertyIndex: number,
+  attributesIndex: number,
+): {
+  result: string | null;
+  currentType: CurrentType;
+  propertyIndex: number;
+  attributesIndex: number;
+} => {
+  let result: string | null = null;
+  if (header.header === ATTRIBUTES) {
+    currentType = ATTRIBUTES;
+    attributesIndex++;
+  } else if (header.header === PROPERTIES) {
+    currentType = PROPERTIES;
+    propertyIndex = 1;
+  } else if (!currentType) {
+    return { result: header.header, currentType, propertyIndex, attributesIndex };
   }
 
-  static readCSVFromFile(extFile: ExtFile): Promise<CSVRow[]> {
-    return new Promise((resolve, reject) => {
-      if (!extFile.file) {
-        reject(new Error('No file provided'));
-        return;
-      }
-
-      let currentType: CurrentType = null;
-      let propertyIndex = 0;
-      let attributesIndex = 0;
-
-      try {
-        Papa.parse<CSVRow>(extFile.file, {
-          header: true,
-          skipEmptyLines: true,
-          transformHeader: (header: string, index: number): string => {
-            if (index === 0) {
-              currentType = null;
-              propertyIndex = 0;
-              attributesIndex = 0;
-            }
-
-            const headerObj = { header, index };
-            const {
-              result,
-              currentType: updatedCurrentType,
-              propertyIndex: updatedPropertyIndex,
-              attributesIndex: updatedAttributesIndex,
-            } = CSVFileReader.processHeader(headerObj, currentType, propertyIndex, attributesIndex);
-
-            currentType = updatedCurrentType;
-            propertyIndex = updatedPropertyIndex;
-            attributesIndex = updatedAttributesIndex;
-
-            return result ?? '';
-          },
-
-          complete: (result: Papa.ParseResult<CSVRow>) => {
-            resolve(result.data);
-          },
-          error: (error) => {
-            reject(new Error(error.message));
-          },
-        });
-      } catch (error) {
-        reject(new Error(formatErrorMessage(error)));
-      }
-    });
+  if (currentType === PROPERTIES) {
+    result = `${PROPERTIES}_${propertyIndex}`;
+    propertyIndex++;
   }
 
-  static async convertCSVRowsToMetadataObjects(extFile: ExtFile) {
-    const csvParsedRows: CSVRow[] = await CSVFileReader.readCSVFromFile(extFile);
-    const metadataObjects: MetadataObject[] = prepareMetadataObjectsFromCSVRows({ csvParsedRows });
-    return metadataObjects;
+  if (currentType === ATTRIBUTES) {
+    result = `${ATTRIBUTES}_${attributesIndex}`;
+    attributesIndex++;
   }
-}
+
+  return { result, currentType, propertyIndex, attributesIndex };
+};
+
+export const readCSVFromFile = (extFile: ExtFile): Promise<CSVRow[]> => {
+  return new Promise((resolve, reject) => {
+    if (!extFile.file) {
+      reject(new Error(dictionary.errors.noFileProvided));
+      return;
+    }
+
+    let currentType: CurrentType = null;
+    let propertyIndex = 0;
+    let attributesIndex = 0;
+
+    try {
+      Papa.parse<CSVRow>(extFile.file, {
+        header: true,
+        skipEmptyLines: true,
+        transformHeader: (header: string, index: number): string => {
+          if (index === 0) {
+            currentType = null;
+            propertyIndex = 0;
+            attributesIndex = 0;
+          }
+
+          const headerObj = { header, index };
+          const {
+            result,
+            currentType: updatedCurrentType,
+            propertyIndex: updatedPropertyIndex,
+            attributesIndex: updatedAttributesIndex,
+          } = processHeader(headerObj, currentType, propertyIndex, attributesIndex);
+
+          currentType = updatedCurrentType;
+          propertyIndex = updatedPropertyIndex;
+          attributesIndex = updatedAttributesIndex;
+
+          return result ?? '';
+        },
+
+        complete: (result: Papa.ParseResult<CSVRow>) => {
+          resolve(result.data);
+        },
+        error: (error) => {
+          reject(new Error(error.message));
+        },
+      });
+    } catch (error) {
+      reject(new Error(formatErrorMessage(error)));
+    }
+  });
+};
+
+export const convertCSVRowsToMetadataObjects = async (extFile: ExtFile) => {
+  const csvParsedRows: CSVRow[] = await readCSVFromFile(extFile);
+  const metadataObjects: MetadataObject[] = prepareMetadataObjectsFromCSVRows({ csvParsedRows });
+  return metadataObjects;
+};
