@@ -1,0 +1,72 @@
+{
+  "extends": [
+    "plugin:@typescript-eslint/strict-type-checked",
+    "plugin:@typescript-eslint/stylistic-type-checked",
+    "plugin:prettier/recommended",
+    "plugin:react/recommended"
+  ],
+  "root": true,
+  "parserOptions": {
+    "project": true
+  },
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "import", "react"],
+  "rules": {
+    "react/prop-types": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "react/react-in-jsx-scope": "off",
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "ImportDeclaration[source.value='react'] > ImportDefaultSpecifier",
+        "message": "React should be not imported"
+      }
+    ],
+    "@typescript-eslint/naming-convention": [
+      "error",
+      {
+        "selector": "interface",
+        "format": ["PascalCase"],
+        "custom": {
+          "regex": "^I[A-Z]",
+          "match": false
+        }
+      }
+    ],
+    "@typescript-eslint/no-misused-promises": "off",
+    "@typescript-eslint/consistent-type-imports": ["error", { "disallowTypeAnnotations": false }],
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_", "args": "all", "caughtErrors": "all" }],
+    "no-restricted-imports": ["error", { "patterns": ["**/../*", ".*"] }],
+    "no-empty-pattern": "error",
+    "no-empty": ["error", { "allowEmptyCatch": true }],
+    "quotes": ["error", "single", { "avoidEscape": true }],
+    "no-console": ["warn"],
+    "import/no-unused-modules": [
+      "off",
+      {
+        "unusedExports": true,
+        "src": ["**/*.ts", "**/*.tsx"],
+        "ignoreExports": ["**/*.d.ts"]
+      }
+    ],
+    "import/order": [
+      "error",
+      {
+        "groups": ["builtin", "external", "internal", ["sibling", "parent"]],
+        "pathGroups": [
+          {
+            "pattern": "react",
+            "group": "external",
+            "position": "before"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": ["react"],
+        "newlines-between": "never",
+        "alphabetize": { "order": "asc", "caseInsensitive": true }
+      }
+    ],
+    "react/jsx-curly-brace-presence": ["error", { "props": "never", "children": "never", "propElementValues": "always" }],
+    "react/jsx-key": ["error", { "checkFragmentShorthand": true }]
+  }
+}
