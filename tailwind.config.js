@@ -13,8 +13,7 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        // TODO: delete all unused fonts from public folder
-        geistRegular: ['Geist-Regular', 'sans-serif'],
+        geistVariable: ['Geist-Variable', 'sans-serif'],
       },
       colors: {
         border: 'hsl(var(--border))',

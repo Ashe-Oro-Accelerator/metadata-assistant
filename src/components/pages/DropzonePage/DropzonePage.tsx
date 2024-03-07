@@ -115,8 +115,8 @@ export default function DropzonePage() {
 
   return (
     <div className="container mx-auto">
-      <h1 className="mt-20 scroll-m-20 text-center text-4xl font-extrabold tracking-tight lg:text-5xl">{dictionary.header.title}</h1>
-      <p className="mb-10 text-center font-semibold leading-7 [&:not(:first-child)]:mt-6">{dictionary.header.description}</p>
+      <h1 className="font-geistVariable mt-20 scroll-m-20 text-center text-3xl font-bold tracking-tight lg:text-6xl">{dictionary.header.title}</h1>
+      <p className="mb-10 text-center text-xl font-medium leading-7 [&:not(:first-child)]:mt-6">{dictionary.header.description}</p>
       <div className="relative flex flex-col justify-center">
         <Dropzone
           onChange={updateFilesReplace}

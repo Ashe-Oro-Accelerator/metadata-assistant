@@ -5,12 +5,12 @@
 
 @layer base {
   @font-face {
-    font-family: 'Geist-Regular.woff2';
-    src: url(/public/fonts/Geist-Regular.woff2) format('woff2');
+    font-family: 'Geist-Variable';
+    src: url(/public/fonts/GeistVariableVF.woff2) format('woff2');
   }
 
   :root {
-    @apply font-geistRegular;
+    @apply font-geistVariable;
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
@@ -83,10 +83,10 @@
 
 @layer components {
   .dropzone-label {
-    @apply font-geistRegular cursor-pointer
+    @apply font-geistVariable cursor-pointer
   }
 
   .dropzone-label label {
-    @apply cursor-pointer border px-7 py-4 bg-slate-500 text-white rounded-lg
+    @apply cursor-pointer border px-7 py-4 bg-slate-500 text-white rounded-lg font-light
   }
 }
