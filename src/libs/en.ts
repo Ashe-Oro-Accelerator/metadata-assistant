@@ -29,4 +29,12 @@ export const dictionary = {
     parsingError: (fileName: string | undefined, err: string) => `Error parsing JSON from file ${fileName}: ${err}`,
     unsupportedFileType: 'This file type is unsupported',
   },
+  modal: {
+    details: 'Details',
+    modalTitle: 'NFT Preview',
+    modalDescription: 'Preview how NFT will be displayed on a marketplace that follows HIP-412 standards.',
+    modalImageAlt: 'NFT Image',
+    descriptionTitle: 'Description',
+    attributesTitle: 'Attributes',
+  },
 } as const;
