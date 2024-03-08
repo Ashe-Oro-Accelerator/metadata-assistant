@@ -110,8 +110,8 @@ export default function DropzonePage() {
     if (metadata.length > 0) {
       const validationResponse: ValidateArrayOfObjectsResult = Hip412Validator.validateArrayOfObjects(metadata);
       setValidationResponse(validationResponse);
-      console.log('metadata:', metadata);
-      console.log('validationResponseeeee:', validationResponse);
+      // console.log('metadata:', metadata);
+      // console.log('validationResponseeeee:', validationResponse);
     }
   }, [metadata]);
 

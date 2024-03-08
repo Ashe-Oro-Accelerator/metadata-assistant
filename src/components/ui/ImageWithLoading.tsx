@@ -3,9 +3,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export const ImageWithLoading = ({ src, alt, className }: { src: string; alt: string; className?: string }) => {
   const [isLoading, setIsLoading] = useState(true);
-  console.log('isLoading:', isLoading);
   const [error, setError] = useState(false);
-  console.log('error:', error);
 
   useEffect(() => {
     const img = new Image();

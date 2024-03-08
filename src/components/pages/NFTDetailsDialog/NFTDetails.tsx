@@ -1,16 +1,45 @@
-import { useCallback, useState } from 'react';
-import { Button } from '@/components/ui/button';
+/*-
+ *
+ * Hedera Metadata Assistant
+ *
+ * Copyright (C) 2024 Hedera Hashgraph, LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { ImageWithLoading } from '@/components/ui/ImageWithLoading';
 import { dictionary } from '@/libs/en';
 import { MetadataObject } from 'hedera-nft-utilities';
 import { Attribute } from '@/utils/types/nftDetails';
 
-export const NFTDetails = ({ metadata, activeId }: { metadata: MetadataObject[]; activeId: number }) => {
-  const name = metadata[currentId].name as string;
-  const description = metadata[currentId].description as string;
-  const image = metadata[currentId].image as string;
-  const attributes = metadata[currentId].attributes as Attribute[];
+export const NFTDetails = ({
+  metadata,
+  activeId,
+  metadataLength,
+  handlePrevious,
+  handleNext,
+}: {
+  metadata: MetadataObject;
+  activeId: number;
+  metadataLength: number;
+  handlePrevious: () => void;
+  handleNext: () => void;
+}) => {
+  const name = metadata.name as string;
+  const description = metadata.description as string;
+  const image = metadata.image as string;
+  const attributes = metadata.attributes as Attribute[];
 
   return (
     <Dialog>
@@ -28,7 +57,7 @@ export const NFTDetails = ({ metadata, activeId }: { metadata: MetadataObject[];
               <ImageWithLoading src={image} alt={dictionary.modal.modalImageAlt} />
             </div>
             <div className="flex flex-col justify-start">
-              <h2 className="mb-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0 md:mb-20">{name}</h2>
+              <h2 className="mb-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0 md:mb-20">{name || '-'}</h2>
               <div className="mb-10 flex items-center justify-center md:hidden">
                 <ImageWithLoading src={image} alt={dictionary.modal.modalImageAlt} />
               </div>
@@ -54,10 +83,10 @@ export const NFTDetails = ({ metadata, activeId }: { metadata: MetadataObject[];
           </div>
         </div>
         <DialogFooter className="flex flex-row items-center gap-1">
-          <Button className="w-full md:w-auto" disabled={currentId === 0} onClick={handlePrevious}>
+          <Button className="w-full md:w-auto" disabled={activeId === 0} onClick={handlePrevious}>
             Previous
           </Button>
-          <Button className="w-full md:w-auto" disabled={currentId === metadata.length - 1} onClick={handleNext}>
+          <Button className="w-full md:w-auto" disabled={activeId === metadataLength - 1} onClick={handleNext}>
             Next
           </Button>
         </DialogFooter>

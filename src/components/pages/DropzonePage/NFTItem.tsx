@@ -19,18 +19,16 @@
  */
 import { DetailedFileValidationResult, MetadataObject } from 'hedera-nft-utilities';
 import { TableCell, TableRow } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { dictionary } from '@/libs/en';
 import { ImageWithLoading } from '@/components/ui/ImageWithLoading';
 import { getProperImageURL } from '@/utils/helpers/getProperImageURL';
-import { NFTDetails } from '@/components/pages/NFTDetailsDialog/NFTDetails';
 
 interface NFTItemProps {
   metadata: MetadataObject;
   validationResult: DetailedFileValidationResult;
+  children: React.ReactNode;
 }
 
-export const NFTItem = ({ metadata, validationResult = { isValid: false, errorsCount: 0, errors: [] } }: NFTItemProps) => {
+export const NFTItem = ({ metadata, validationResult = { isValid: false, errorsCount: 0, errors: [] }, children }: NFTItemProps) => {
   const { isValid, errorsCount } = validationResult;
   const name = metadata.name as string;
   const description = metadata.description as string;
@@ -46,9 +44,7 @@ export const NFTItem = ({ metadata, validationResult = { isValid: false, errorsC
         <TableCell>{description || '-'}</TableCell>
         <TableCell className={isValid ? 'text-green-500' : 'text-red-500'}>{isValid ? 'Passed' : 'Failed'}</TableCell>
         <TableCell>{errorsCount}</TableCell>
-        <TableCell className="ml-auto text-right">
-          <NFTDetails metadata={metadata} activeId={currentId} />
-        </TableCell>
+        <TableCell className="ml-auto text-right">{children}</TableCell>
       </TableRow>
     </>
   );
