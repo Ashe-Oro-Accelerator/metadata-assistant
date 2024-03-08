@@ -1,3 +1,4 @@
+/*eslint-env node*/
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ['class'],
@@ -8,7 +9,7 @@ module.exports = {
       center: true,
       padding: '2rem',
       screens: {
-        '2xl': '750px',
+        '2xl': '1200px',
       },
     },
     extend: {

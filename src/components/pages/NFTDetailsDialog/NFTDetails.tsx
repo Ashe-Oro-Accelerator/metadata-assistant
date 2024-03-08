@@ -1,16 +1,16 @@
 import { useCallback, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { ImageWithLoading } from '@/components/ImageWithLoading';
+import { ImageWithLoading } from '@/components/ui/ImageWithLoading';
 import { dictionary } from '@/libs/en';
-import { NFTDetailsType } from '@/utils/types/nftDetails';
+import { MetadataObject } from 'hedera-nft-utilities';
+import { Attribute } from '@/utils/types/nftDetails';
 
-export const NFTDetails = ({ nftDetailsList, activeId }: { nftDetailsList: NFTDetailsType[]; activeId: number }) => {
-  const [currentId, setCurrentId] = useState(activeId);
-  const { name, description, image, attributes } = nftDetailsList[currentId];
-
-  const handlePrevious = useCallback(() => setCurrentId((oldId) => Math.max(oldId - 1, 0)), []);
-  const handleNext = useCallback(() => setCurrentId((oldId) => Math.min(oldId + 1, nftDetailsList.length - 1)), [nftDetailsList.length]);
+export const NFTDetails = ({ metadata, activeId }: { metadata: MetadataObject[]; activeId: number }) => {
+  const name = metadata[currentId].name as string;
+  const description = metadata[currentId].description as string;
+  const image = metadata[currentId].image as string;
+  const attributes = metadata[currentId].attributes as Attribute[];
 
   return (
     <Dialog>
@@ -57,7 +57,7 @@ export const NFTDetails = ({ nftDetailsList, activeId }: { nftDetailsList: NFTDe
           <Button className="w-full md:w-auto" disabled={currentId === 0} onClick={handlePrevious}>
             Previous
           </Button>
-          <Button className="w-full md:w-auto" disabled={currentId === nftDetailsList.length - 1} onClick={handleNext}>
+          <Button className="w-full md:w-auto" disabled={currentId === metadata.length - 1} onClick={handleNext}>
             Next
           </Button>
         </DialogFooter>

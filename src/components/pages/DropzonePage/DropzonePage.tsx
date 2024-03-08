@@ -27,12 +27,14 @@ import { SUPPORTED_FILE_TYPES_ARRAY, supportedFileTypes } from '@/components/pag
 import { dictionary } from '@/libs/en';
 import { convertCSVRowsToMetadataObjects } from '@/utils/helpers/csv-file-reader';
 import { formatErrorMessage } from '@/utils/helpers/formatErrorMessage';
+import { NFTList } from '@/components/pages/DropzonePage/NFTList';
+import { Button } from '@/components/ui/button';
 
 export default function DropzonePage() {
   const [files, setFiles] = useState<ExtFile[]>([]);
   const [metadata, setMetadata] = useState<MetadataObject[]>([]);
   const [error, setError] = useState<string>('');
-  const [validationResponse, setValidationResponse] = useState<ValidateArrayOfObjectsResult>();
+  const [validationResponse, setValidationResponse] = useState<ValidateArrayOfObjectsResult | undefined>(undefined);
 
   const readFile = async (extFile: ExtFile) => {
     setMetadata([]);
@@ -109,15 +111,15 @@ export default function DropzonePage() {
       const validationResponse: ValidateArrayOfObjectsResult = Hip412Validator.validateArrayOfObjects(metadata);
       setValidationResponse(validationResponse);
       console.log('metadata:', metadata);
-      console.log('validationResponse:', validationResponse);
+      console.log('validationResponseeeee:', validationResponse);
     }
   }, [metadata]);
 
   return (
     <div className="container mx-auto">
-      <h1 className="font-geistVariable mt-20 scroll-m-20 text-center text-3xl font-bold tracking-tight lg:text-6xl">{dictionary.header.title}</h1>
-      <p className="mb-10 text-center text-xl font-medium leading-7 [&:not(:first-child)]:mt-6">{dictionary.header.description}</p>
-      <div className="relative flex flex-col justify-center">
+      <div className="relative mx-auto flex max-w-[600px] flex-col items-center justify-center">
+        <h1 className="mt-6 scroll-m-20 text-center font-geistVariable text-3xl font-bold tracking-tight lg:text-6xl">{dictionary.header.title}</h1>
+        <p className="mb-10 text-center text-xl font-medium leading-7 [&:not(:first-child)]:mt-6">{dictionary.header.description}</p>
         <Dropzone
           onChange={updateFilesReplace}
           accept={supportedFileTypes()}
@@ -140,6 +142,19 @@ export default function DropzonePage() {
         </Dropzone>
         {error && <span className="mt-2 text-center font-bold text-red-500">{error}</span>}
       </div>
+      {validationResponse && (
+        <div className="my-10">
+          <div className="mb-10 flex items-center justify-between">
+            <div className="px-4">
+              <h3 className="font-semibold">{dictionary.nftTable.title}</h3>
+              <p>{dictionary.nftTable.description}</p>
+            </div>
+            <Button>{dictionary.nftTable.downloadJSONsButton}</Button>
+          </div>
+
+          <NFTList metadata={metadata} validationResponse={validationResponse} />
+        </div>
+      )}
     </div>
   );
 }

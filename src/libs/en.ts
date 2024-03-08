@@ -20,6 +20,19 @@
 export const dictionary = {
   header: { title: 'Metadata Assistant', description: 'Upload either a CSV file or a directory of JSONs...' },
   dropzone: { description: 'Upload a file' },
+  nftTable: {
+    title: 'Validation result',
+    description: 'Here is a list of all validated NFTs. Youu can filter them by validation status and number of errors.',
+    downloadJSONsButton: 'Download JSONs',
+    detailsButton: 'Details',
+    imageAltText: 'Image of',
+    headers: {
+      name: 'Name',
+      description: 'Description',
+      validationStatus: 'Validation status',
+      errors: 'Errors',
+    },
+  },
   errors: {
     unknownError: 'Unknown error occurred',
     jsonFileUpload: 'Error during processing the JSON file',
