@@ -31,4 +31,12 @@ export const dictionary = {
     noFileProvided: 'No file provided',
     zipFileWithoutJsonFiles: 'This zip file does not contain json files.',
   },
+  modal: {
+    details: 'Details',
+    modalTitle: 'NFT Preview',
+    modalDescription: 'Preview how NFT will be displayed on a marketplace that follows HIP-412 standards.',
+    modalImageAlt: 'NFT Image',
+    descriptionTitle: 'Description',
+    attributesTitle: 'Attributes',
+  },
 } as const;
