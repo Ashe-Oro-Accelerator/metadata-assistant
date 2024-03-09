@@ -26,7 +26,7 @@ import { cn } from '@/utils/helpers/cn';
 import { truncateString } from '@/utils/helpers/truncateString';
 
 const TRUNCATE_NAME_NUMBER = 30;
-const TRUNCATE_DESCRIPTION_NUMBER = 200;
+const TRUNCATE_DESCRIPTION_NUMBER = 180;
 
 interface NFTItemProps {
   metadata: MetadataObject;

@@ -6,9 +6,21 @@ export const ImageWithLoading = ({ src, alt, className }: { src: string; alt: st
   const [error, setError] = useState(false);
 
   useEffect(() => {
+    setIsLoading(true);
+    setError(false);
+
+    if (!src) {
+      setError(true);
+      setIsLoading(false);
+      return;
+    }
+
     const img = new Image();
     img.src = src;
-    img.onload = () => setIsLoading(false);
+    img.onload = () => {
+      setIsLoading(false);
+      setError(false);
+    };
     img.onerror = () => {
       setError(true);
       setIsLoading(false);
@@ -24,7 +36,7 @@ export const ImageWithLoading = ({ src, alt, className }: { src: string; alt: st
           <Skeleton className="h-full w-full rounded-xl" />
         </div>
       )}
-      <img className={`max-h-[500px] ${className}`} src={displayPlaceholderImage ? 'no-image-placeholder.webp' : src} alt={alt} />
+      <img className={`max-h-[400px] ${className}`} src={displayPlaceholderImage ? 'no-image-placeholder.webp' : src} alt={alt} />
     </>
   );
 };

@@ -55,7 +55,7 @@ export const NFTDetails = ({
         </DialogHeader>
         <div className="h-full gap-4 py-4">
           <div className="grid grid-cols-1 items-start md:grid-cols-2 md:items-center">
-            <div className="hidden items-center justify-center md:flex">
+            <div className="mb-auto hidden items-center justify-center md:flex">
               <ImageWithLoading src={image} alt={dictionary.modal.modalImageAlt} />
             </div>
             <div className="mb-auto flex flex-col">
