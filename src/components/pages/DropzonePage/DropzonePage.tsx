@@ -144,8 +144,8 @@ export default function DropzonePage() {
       </div>
       {validationResponse && (
         <div className="my-10">
-          <div className="mb-10 flex items-center justify-between">
-            <div className="px-4">
+          <div className="mb-10 flex items-center justify-between px-4">
+            <div>
               <h3 className="font-semibold">{dictionary.nftTable.title}</h3>
               <p>{dictionary.nftTable.description}</p>
             </div>

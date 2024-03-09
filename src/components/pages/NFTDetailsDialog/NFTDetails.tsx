@@ -63,12 +63,10 @@ export const NFTDetails = ({
               <div className="mb-10 flex items-center justify-center md:hidden">
                 <ImageWithLoading src={image} alt={dictionary.modal.modalImageAlt} />
               </div>
-
               <div className="mb-6">
                 <p className="mb-2 text-lg font-semibold">{dictionary.modal.descriptionTitle}</p>
                 {description || '-'}
               </div>
-
               {attributes && (
                 <div className="mb-6">
                   <p className="text-lg font-semibold">{dictionary.modal.attributesTitle}</p>
