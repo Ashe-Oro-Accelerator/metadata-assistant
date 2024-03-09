@@ -18,9 +18,13 @@
  *
  */
 import { MetadataObject, ValidateArrayOfObjectsResult } from 'hedera-nft-utilities';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { useCallback, useEffect, useState } from 'react';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { TABLE_HEADERS } from '@/utils/constants/nftTableHeaders';
 import { NFTItemWrapper } from '@/components/pages/DropzonePage/NFTItemWrapper';
+
+const BATCH_SIZE = 20;
 
 interface NFTListProps {
   metadata: MetadataObject[];
@@ -28,22 +32,53 @@ interface NFTListProps {
 }
 
 export const NFTList = ({ metadata, validationResponse }: NFTListProps) => {
+  const [visibleItems, setVisibleItems] = useState(metadata.slice(0, BATCH_SIZE));
+  const [hasMore, setHasMore] = useState(metadata.length > BATCH_SIZE);
+
+  useEffect(() => {
+    setVisibleItems(metadata.slice(0, BATCH_SIZE));
+    setHasMore(metadata.length > BATCH_SIZE);
+  }, [metadata]);
+
+  const fetchMoreData = useCallback(() => {
+    const nextItemsCount = Math.min(visibleItems.length + BATCH_SIZE, metadata.length);
+
+    if (visibleItems.length >= metadata.length) {
+      setHasMore(false);
+      return;
+    }
+
+    setVisibleItems(metadata.slice(0, nextItemsCount));
+  }, [visibleItems.length, metadata]);
+
   return (
-    <Table>
-      <TableHeader className="font-semibold">
-        <TableRow>
-          {TABLE_HEADERS.map((head, index) => (
-            <TableHead className="whitespace-nowrap font-semibold text-black" key={index}>
-              {head}
-            </TableHead>
+    <InfiniteScroll
+      dataLength={visibleItems.length}
+      next={fetchMoreData}
+      hasMore={hasMore}
+      loader={<></>}
+      // endMessage={
+      //   <p style={{ textAlign: 'center' }}>
+      //     <b>You have seen it all</b>
+      //   </p>
+      // }
+    >
+      <Table>
+        <TableHeader className="font-semibold">
+          <TableRow>
+            {TABLE_HEADERS.map((head, index) => (
+              <TableHead className="whitespace-nowrap font-semibold text-black" key={index}>
+                {head}
+              </TableHead>
+            ))}
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {visibleItems.map((item, index) => (
+            <NFTItemWrapper key={index} item={item} index={index} metadata={metadata} validationResponse={validationResponse} />
           ))}
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {metadata.map((item, index) => (
-          <NFTItemWrapper key={index} item={item} index={index} metadata={metadata} validationResponse={validationResponse} />
-        ))}
-      </TableBody>
-    </Table>
+        </TableBody>
+      </Table>
+    </InfiniteScroll>
   );
 };
