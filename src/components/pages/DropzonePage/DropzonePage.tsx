@@ -142,7 +142,7 @@ export default function DropzonePage() {
         </Dropzone>
         {error && <span className="mt-2 text-center font-bold text-red-500">{error}</span>}
       </div>
-      {validationResponse && (
+      {validationResponse && metadata.length > 0 && (
         <div className="my-10">
           <div className="mb-10 flex items-center justify-between px-4">
             <div>

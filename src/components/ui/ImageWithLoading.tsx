@@ -1,7 +1,17 @@
 import { useEffect, useState } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 
-export const ImageWithLoading = ({ src, alt, className }: { src: string; alt: string; className?: string }) => {
+export const ImageWithLoading = ({
+  src,
+  alt,
+  className,
+  showSkeleton = true,
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+  showSkeleton?: boolean;
+}) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -31,7 +41,7 @@ export const ImageWithLoading = ({ src, alt, className }: { src: string; alt: st
 
   return (
     <>
-      {isLoading && !error && (
+      {showSkeleton && isLoading && !error && (
         <div className={`flex h-[500px] w-1/2 flex-col space-y-3 ${className}`}>
           <Skeleton className="h-full w-full rounded-xl" />
         </div>

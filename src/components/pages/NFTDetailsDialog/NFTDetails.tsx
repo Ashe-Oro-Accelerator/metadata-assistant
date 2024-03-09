@@ -39,10 +39,10 @@ export const NFTDetails = ({
   handlePrevious: () => void;
   handleNext: () => void;
 }) => {
-  const name = metadata.name as string;
-  const description = metadata.description as string;
-  const image = getProperImageURL(metadata.image as string);
-  const attributes = metadata.attributes as Attribute[];
+  const name = metadata?.name as string;
+  const description = metadata?.description as string;
+  const image = getProperImageURL(metadata?.image as string);
+  const attributes = metadata?.attributes as Attribute[];
 
   return (
     <Dialog>
@@ -56,12 +56,12 @@ export const NFTDetails = ({
         <div className="h-full gap-4 py-4">
           <div className="grid grid-cols-1 items-start md:grid-cols-2 md:items-center">
             <div className="mb-auto hidden items-center justify-center md:flex">
-              <ImageWithLoading src={image} alt={dictionary.modal.modalImageAlt} />
+              <ImageWithLoading src={image} alt={dictionary.modal.modalImageAlt} showSkeleton={false} />
             </div>
             <div className="mb-auto flex flex-col">
               <h2 className="mb-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0 md:mb-20">{name || '-'}</h2>
               <div className="mb-10 flex items-center justify-center md:hidden">
-                <ImageWithLoading src={image} alt={dictionary.modal.modalImageAlt} />
+                <ImageWithLoading src={image} alt={dictionary.modal.modalImageAlt} showSkeleton={false} />
               </div>
               <div className="mb-6">
                 <p className="mb-2 text-lg font-semibold">{dictionary.modal.descriptionTitle}</p>
