@@ -16,12 +16,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- */ import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+ */
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTrigger } from '@/components/ui/dialog';
 import { ImageWithLoading } from '@/components/ui/ImageWithLoading';
 import { dictionary } from '@/libs/en';
 import { MetadataObject } from 'hedera-nft-utilities';
 import { Attribute } from '@/utils/types/nftDetails';
+import { getProperImageURL } from '@/utils/helpers/getProperImageURL';
+import { DialogTitle } from '@radix-ui/react-dialog';
 
 export const NFTDetails = ({
   metadata,
@@ -38,7 +41,7 @@ export const NFTDetails = ({
 }) => {
   const name = metadata.name as string;
   const description = metadata.description as string;
-  const image = metadata.image as string;
+  const image = getProperImageURL(metadata.image as string);
   const attributes = metadata.attributes as Attribute[];
 
   return (
@@ -46,27 +49,26 @@ export const NFTDetails = ({
       <DialogTrigger asChild>
         <Button variant="link">{dictionary.modal.details}</Button>
       </DialogTrigger>
-      <DialogContent className="flex max-h-screen max-w-[1300px] flex-col justify-between overflow-y-scroll md:h-[900px]">
+      <DialogContent className="flex max-h-screen max-w-[1300px] flex-col justify-center md:h-[900px]">
         <DialogHeader>
-          <DialogTitle>{dictionary.modal.modalTitle}</DialogTitle>
-          <DialogDescription>{dictionary.modal.modalDescription}</DialogDescription>
+          <DialogTitle>{`NFT number: ${activeId + 1}`}</DialogTitle>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-2">
+        <div className="h-full gap-4 py-4">
+          <div className="grid grid-cols-1 items-start md:grid-cols-2 md:items-center">
             <div className="hidden items-center justify-center md:flex">
               <ImageWithLoading src={image} alt={dictionary.modal.modalImageAlt} />
             </div>
-            <div className="flex flex-col justify-start">
+            <div className="mb-auto flex flex-col">
               <h2 className="mb-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0 md:mb-20">{name || '-'}</h2>
               <div className="mb-10 flex items-center justify-center md:hidden">
                 <ImageWithLoading src={image} alt={dictionary.modal.modalImageAlt} />
               </div>
-              {description && (
-                <div className="mb-6">
-                  <p className="mb-2 text-lg font-semibold">{dictionary.modal.descriptionTitle}</p>
-                  {description}
-                </div>
-              )}
+
+              <div className="mb-6">
+                <p className="mb-2 text-lg font-semibold">{dictionary.modal.descriptionTitle}</p>
+                {description || '-'}
+              </div>
+
               {attributes && (
                 <div className="mb-6">
                   <p className="text-lg font-semibold">{dictionary.modal.attributesTitle}</p>
@@ -83,10 +85,10 @@ export const NFTDetails = ({
           </div>
         </div>
         <DialogFooter className="flex flex-row items-center gap-1">
-          <Button className="w-full md:w-auto" disabled={activeId === 0} onClick={handlePrevious}>
+          <Button className="w-full md:w-[100px]" disabled={activeId === 0} onClick={handlePrevious}>
             Previous
           </Button>
-          <Button className="w-full md:w-auto" disabled={activeId === metadataLength - 1} onClick={handleNext}>
+          <Button className="w-full md:w-[100px]" disabled={activeId === metadataLength - 1} onClick={handleNext}>
             Next
           </Button>
         </DialogFooter>

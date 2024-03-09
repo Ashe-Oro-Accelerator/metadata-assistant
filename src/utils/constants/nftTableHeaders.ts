@@ -24,4 +24,6 @@ export const TABLE_HEADERS = [
   dictionary.nftTable.headers.description,
   dictionary.nftTable.headers.validationStatus,
   dictionary.nftTable.headers.errors,
+  // Last header as empty string to keep the hover effect on full width of the headers row
+  '',
 ] as const;

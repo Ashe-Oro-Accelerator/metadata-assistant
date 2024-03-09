@@ -19,8 +19,14 @@
  */
 import { DetailedFileValidationResult, MetadataObject } from 'hedera-nft-utilities';
 import { TableCell, TableRow } from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
 import { ImageWithLoading } from '@/components/ui/ImageWithLoading';
 import { getProperImageURL } from '@/utils/helpers/getProperImageURL';
+import { cn } from '@/utils/helpers/cn';
+import { truncateString } from '@/utils/helpers/truncateString';
+
+const TRUNCATE_NAME_NUMBER = 30;
+const TRUNCATE_DESCRIPTION_NUMBER = 200;
 
 interface NFTItemProps {
   metadata: MetadataObject;
@@ -35,17 +41,24 @@ export const NFTItem = ({ metadata, validationResult = { isValid: false, errorsC
   const image = getProperImageURL(metadata.image as string);
 
   return (
-    <>
-      <TableRow>
-        <TableCell className="flex items-center">
+    <TableRow>
+      <TableCell className="flex items-center">
+        <div className="w-[80px]">
           <ImageWithLoading src={image} alt={name} className="mr-6 max-h-[60px] max-w-[60px]" />
-          {name || '-'}
-        </TableCell>
-        <TableCell>{description || '-'}</TableCell>
-        <TableCell className={isValid ? 'text-green-500' : 'text-red-500'}>{isValid ? 'Passed' : 'Failed'}</TableCell>
-        <TableCell>{errorsCount}</TableCell>
-        <TableCell className="ml-auto text-right">{children}</TableCell>
-      </TableRow>
-    </>
+        </div>
+        <span className="min-w-[150px]">{truncateString(name, TRUNCATE_NAME_NUMBER) || '-'}</span>
+      </TableCell>
+      <TableCell className="max-w-[450px]">{truncateString(description, TRUNCATE_DESCRIPTION_NUMBER) || '-'}</TableCell>
+      <TableCell>
+        <Badge
+          variant="outline"
+          className={cn(isValid ? 'border-green-600 bg-green-200 text-green-600' : 'border-red-600 bg-red-200 text-red-600', 'border')}
+        >
+          {isValid ? 'Passed' : 'Failed'}
+        </Badge>
+      </TableCell>
+      <TableCell>{errorsCount}</TableCell>
+      <TableCell className="ml-auto text-right">{children}</TableCell>
+    </TableRow>
   );
 };

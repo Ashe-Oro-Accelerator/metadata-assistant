@@ -17,41 +17,10 @@
  * limitations under the License.
  *
  */
-import { NFTItem } from '@/components/pages/DropzonePage/NFTItem';
 import { MetadataObject, ValidateArrayOfObjectsResult } from 'hedera-nft-utilities';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { TABLE_HEADERS } from '@/utils/constants/nftTableHeaders';
-import { useCallback, useState } from 'react';
-import { NFTDetails } from '@/components/pages/NFTDetailsDialog/NFTDetails';
-
-const NFTItemWrapper = ({
-  item,
-  index,
-  metadata,
-  validationResponse,
-}: {
-  item: MetadataObject;
-  index: number;
-  metadata: MetadataObject[];
-  validationResponse: ValidateArrayOfObjectsResult;
-}) => {
-  const [activeId, setActiveId] = useState(index);
-  const handlePrevious = useCallback(() => setActiveId((oldId) => Math.max(oldId - 1, 0)), []);
-  const handleNext = useCallback(() => setActiveId((oldId) => Math.min(oldId + 1, metadata.length - 1)), [metadata.length]);
-  const validationResult = validationResponse?.results[index];
-
-  return (
-    <NFTItem key={index} metadata={item} validationResult={validationResult}>
-      <NFTDetails
-        metadata={metadata[activeId]}
-        metadataLength={metadata.length}
-        activeId={activeId}
-        handlePrevious={handlePrevious}
-        handleNext={handleNext}
-      />
-    </NFTItem>
-  );
-};
+import { NFTItemWrapper } from '@/components/pages/DropzonePage/NFTItemWrapper';
 
 interface NFTListProps {
   metadata: MetadataObject[];
@@ -60,23 +29,21 @@ interface NFTListProps {
 
 export const NFTList = ({ metadata, validationResponse }: NFTListProps) => {
   return (
-    <>
-      <Table>
-        <TableHeader className="font-semibold">
-          <TableRow>
-            {TABLE_HEADERS.map((head, index) => (
-              <TableHead className="font-semibold text-black" key={index}>
-                {head}
-              </TableHead>
-            ))}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {metadata.map((item, index) => (
-            <NFTItemWrapper key={index} item={item} index={index} metadata={metadata} validationResponse={validationResponse} />
+    <Table>
+      <TableHeader className="font-semibold">
+        <TableRow>
+          {TABLE_HEADERS.map((head, index) => (
+            <TableHead className="whitespace-nowrap font-semibold text-black" key={index}>
+              {head}
+            </TableHead>
           ))}
-        </TableBody>
-      </Table>
-    </>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {metadata.map((item, index) => (
+          <NFTItemWrapper key={index} item={item} index={index} metadata={metadata} validationResponse={validationResponse} />
+        ))}
+      </TableBody>
+    </Table>
   );
 };
