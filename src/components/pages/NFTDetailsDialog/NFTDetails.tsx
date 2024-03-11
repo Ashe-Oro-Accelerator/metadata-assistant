@@ -21,7 +21,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTrigger } from '@/components/ui/dialog';
 import { ImageWithLoading } from '@/components/ui/ImageWithLoading';
 import { dictionary } from '@/libs/en';
-import { MetadataObject } from 'hedera-nft-utilities';
+import { MetadataObject, ValidateArrayOfObjectsResult } from 'hedera-nft-utilities';
 import { Attribute } from '@/utils/types/nftDetails';
 import { getProperImageURL } from '@/utils/helpers/getProperImageURL';
 import { DialogTitle } from '@radix-ui/react-dialog';
@@ -32,17 +32,21 @@ export const NFTDetails = ({
   metadataLength,
   handlePrevious,
   handleNext,
+  validationResponse,
 }: {
   metadata: MetadataObject;
   activeId: number;
   metadataLength: number;
   handlePrevious: () => void;
   handleNext: () => void;
+  validationResponse: ValidateArrayOfObjectsResult;
 }) => {
   const name = metadata?.name as string;
   const description = metadata?.description as string;
   const image = getProperImageURL(metadata?.image as string);
   const attributes = metadata?.attributes as Attribute[];
+  const validationResult = validationResponse.results[activeId];
+  const errorsPresent = !validationResult.isValid;
 
   return (
     <Dialog>
@@ -55,8 +59,16 @@ export const NFTDetails = ({
         </DialogHeader>
         <div className="h-full gap-4 py-4">
           <div className="grid grid-cols-1 items-start md:grid-cols-2 md:items-center">
-            <div className="mb-auto hidden items-center justify-center md:flex">
+            <div className="mb-auto flex hidden flex-col items-center justify-center md:flex">
               <ImageWithLoading src={image} alt={dictionary.modal.modalImageAlt} showSkeleton={false} />
+              {errorsPresent && (
+                <div className="mt-6 w-full text-red-600">
+                  <h3 className="font-semibold text-black">There are errors:</h3>
+                  {validationResult.errors.map((error, index) => (
+                    <p key={error + index}>{`${index + 1}) ${error}`}</p>
+                  ))}
+                </div>
+              )}
             </div>
             <div className="mb-auto flex flex-col">
               <h2 className="mb-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0 md:mb-20">{name || '-'}</h2>

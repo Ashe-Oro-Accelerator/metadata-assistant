@@ -24,7 +24,7 @@ import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components
 import { TABLE_HEADERS } from '@/utils/constants/nftTableHeaders';
 import { NFTItemWrapper } from '@/components/pages/DropzonePage/NFTItemWrapper';
 
-const BATCH_SIZE = 20;
+const BATCH_SIZE = 10;
 
 interface NFTListProps {
   metadata: MetadataObject[];
@@ -52,17 +52,7 @@ export const NFTList = ({ metadata, validationResponse }: NFTListProps) => {
   }, [visibleItems.length, metadata]);
 
   return (
-    <InfiniteScroll
-      dataLength={visibleItems.length}
-      next={fetchMoreData}
-      hasMore={hasMore}
-      loader={<></>}
-      // endMessage={
-      //   <p style={{ textAlign: 'center' }}>
-      //     <b>You have seen it all</b>
-      //   </p>
-      // }
-    >
+    <InfiniteScroll dataLength={visibleItems.length} next={fetchMoreData} hasMore={hasMore} loader={<></>}>
       <Table>
         <TableHeader className="font-semibold">
           <TableRow>
