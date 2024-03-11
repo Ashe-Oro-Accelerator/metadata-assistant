@@ -55,7 +55,7 @@ export const NFTDetails = ({
       </DialogTrigger>
       <DialogContent className="flex max-h-screen max-w-[1300px] flex-col justify-center md:h-[900px]">
         <DialogHeader>
-          <DialogTitle>{`NFT number: ${activeId + 1}`}</DialogTitle>
+          <DialogTitle>{`${dictionary.modal.nftNumber}: ${activeId + 1}`}</DialogTitle>
         </DialogHeader>
         <div className="h-full gap-4 py-4">
           <div className="grid grid-cols-1 items-start md:grid-cols-2 md:items-center">
@@ -63,10 +63,8 @@ export const NFTDetails = ({
               <ImageWithLoading src={image} alt={dictionary.modal.modalImageAlt} showSkeleton={false} />
               {errorsPresent && (
                 <div className="mt-6 w-full text-red-600">
-                  <h3 className="font-semibold text-black">There are errors:</h3>
-                  {validationResult.errors.map((error, index) => (
-                    <p key={error + index}>{`${index + 1}) ${error}`}</p>
-                  ))}
+                  <h3 className="font-semibold text-black">{dictionary.modal.thereAreErrors}:</h3>
+                  {validationResult?.errors.map((error, index) => <p key={error + index}>{`${index + 1}) ${error}`}</p>)}
                 </div>
               )}
             </div>
@@ -95,12 +93,16 @@ export const NFTDetails = ({
           </div>
         </div>
         <DialogFooter className="flex flex-row items-center gap-1">
-          <Button className="w-full md:w-[100px]" disabled={activeId === 0} onClick={handlePrevious}>
-            Previous
-          </Button>
-          <Button className="w-full md:w-[100px]" disabled={activeId === metadataLength - 1} onClick={handleNext}>
-            Next
-          </Button>
+          {metadataLength > 1 ? (
+            <>
+              <Button className="w-full md:w-[100px]" disabled={activeId === 0} onClick={handlePrevious}>
+                Previous
+              </Button>
+              <Button className="w-full md:w-[100px]" disabled={activeId === metadataLength - 1} onClick={handleNext}>
+                Next
+              </Button>
+            </>
+          ) : null}
         </DialogFooter>
       </DialogContent>
     </Dialog>

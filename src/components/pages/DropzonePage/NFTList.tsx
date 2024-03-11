@@ -24,6 +24,7 @@ import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components
 import { TABLE_HEADERS } from '@/utils/constants/nftTableHeaders';
 import { NFTItemWrapper } from '@/components/pages/DropzonePage/NFTItemWrapper';
 import { countInvalidObjects } from '@/utils/helpers/countInvalidMetadataObjects';
+import { dictionary } from '@/libs/en';
 
 const BATCH_SIZE = 10;
 
@@ -54,7 +55,7 @@ export const NFTList = ({ metadata, validationResponse }: NFTListProps) => {
 
   return (
     <InfiniteScroll dataLength={visibleItems.length} next={fetchMoreData} hasMore={hasMore} loader={<></>}>
-      <h2 className="mb-10 pl-4 font-semibold">Invalid files count: {countInvalidObjects(validationResponse)}</h2>
+      <h2 className="mb-10 pl-4 font-semibold">{`${dictionary.nftTable.invalidFilesCount}:  ${countInvalidObjects(validationResponse)}`}</h2>
       <Table>
         <TableHeader className="font-semibold">
           <TableRow>

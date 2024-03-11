@@ -26,6 +26,7 @@ export const dictionary = {
     downloadJSONsButton: 'Download JSONs',
     detailsButton: 'Details',
     imageAltText: 'Image of',
+    invalidFilesCount: 'Invalid files count',
     headers: {
       name: 'Name',
       description: 'Description',
@@ -51,5 +52,7 @@ export const dictionary = {
     modalImageAlt: 'NFT Image',
     descriptionTitle: 'Description',
     attributesTitle: 'Attributes',
+    thereAreErrors: 'There are errors',
+    nftNumber: 'NFT number',
   },
 } as const;
