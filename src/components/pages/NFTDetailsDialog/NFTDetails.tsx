@@ -46,7 +46,7 @@ export const NFTDetails = ({
   const image = getProperImageURL(metadata?.image as string);
   const attributes = metadata?.attributes as Attribute[];
   const validationResult = validationResponse.results[activeId];
-  const errorsPresent = !validationResult.isValid;
+  const errorsPresent = !validationResult?.isValid;
 
   return (
     <Dialog>
