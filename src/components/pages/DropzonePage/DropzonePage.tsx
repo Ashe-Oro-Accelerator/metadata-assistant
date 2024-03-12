@@ -65,7 +65,6 @@ export default function DropzonePage() {
 
           try {
             const json = fileData ? (JSON.parse(fileData) as MetadataObject) : {};
-            // This sorting is used because ZIP files don't keep files in order, so it makes sure everything is listed alphabetically
             setMetadata((prevMetadata) => [...prevMetadata, { metadata: json, fileName }].sort((a, b) => (a.fileName < b.fileName ? -1 : 0)));
           } catch (err) {
             console.error(dictionary.errors.parsingError(fileName, err as string));
@@ -122,6 +121,7 @@ export default function DropzonePage() {
     }
   }, [metadata]);
 
+  // This sorting is used because ZIP files don't keep files in order, so it makes sure everything is listed alphabetically
   const sortedMetadataRows = metadata.sort((a, b) => a.fileName.localeCompare(b.fileName, undefined, { numeric: true, sensitivity: 'base' }));
 
   return (
