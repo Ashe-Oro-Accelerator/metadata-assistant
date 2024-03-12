@@ -27,24 +27,26 @@ import { getProperImageURL } from '@/utils/helpers/getProperImageURL';
 import { DialogTitle } from '@radix-ui/react-dialog';
 
 export const NFTDetails = ({
-  metadata,
+  metadataObject,
+  fileName,
   activeId,
   metadataLength,
   handlePrevious,
   handleNext,
   validationResponse,
 }: {
-  metadata: MetadataObject;
+  metadataObject: MetadataObject;
+  fileName: string;
   activeId: number;
   metadataLength: number;
   handlePrevious: () => void;
   handleNext: () => void;
   validationResponse: ValidateArrayOfObjectsResult;
 }) => {
-  const name = metadata?.name as string;
-  const description = metadata?.description as string;
-  const image = getProperImageURL(metadata?.image as string);
-  const attributes = metadata?.attributes as Attribute[];
+  const name = metadataObject?.name as string;
+  const description = metadataObject?.description as string;
+  const image = getProperImageURL(metadataObject?.image as string);
+  const attributes = metadataObject?.attributes as Attribute[];
   const validationResult = validationResponse.results[activeId];
   const errorsPresent = !validationResult?.isValid;
 
@@ -55,7 +57,10 @@ export const NFTDetails = ({
       </DialogTrigger>
       <DialogContent className="flex max-h-screen max-w-[1300px] flex-col justify-center md:h-[900px]">
         <DialogHeader>
-          <DialogTitle>{`${dictionary.modal.nftNumber}: ${activeId + 1}`}</DialogTitle>
+          <DialogTitle>
+            <span className="font-bold">{dictionary.modal.fileName}: </span>
+            {fileName}
+          </DialogTitle>
         </DialogHeader>
         <div className="h-full gap-4 py-4">
           <div className="grid grid-cols-1 items-start md:grid-cols-2 md:items-center">
@@ -74,12 +79,12 @@ export const NFTDetails = ({
                 <ImageWithLoading src={image} alt={dictionary.modal.modalImageAlt} showSkeleton={false} />
               </div>
               <div className="mb-6">
-                <p className="mb-2 text-lg font-semibold">{dictionary.modal.descriptionTitle}</p>
+                <p className="mb-2 text-lg font-bold">{dictionary.modal.descriptionTitle}</p>
                 {description || '-'}
               </div>
               {attributes?.length > 0 && (
                 <div className="mb-6">
-                  <p className="text-lg font-semibold">{dictionary.modal.attributesTitle}</p>
+                  <p className="text-lg font-bold">{dictionary.modal.attributesTitle}</p>
                   <ul className="ml-6 list-disc [&>li]:mt-2">
                     {attributes.map(({ trait_type, value }) => (
                       <li key={trait_type}>

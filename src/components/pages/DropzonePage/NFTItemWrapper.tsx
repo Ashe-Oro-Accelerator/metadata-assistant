@@ -21,28 +21,30 @@ import { NFTItem } from '@/components/pages/DropzonePage/NFTItem';
 import { useCallback, useState } from 'react';
 import { NFTDetails } from '@/components/pages/NFTDetailsDialog/NFTDetails';
 import { MetadataObject, ValidateArrayOfObjectsResult } from 'hedera-nft-utilities';
+import { MetadataRow } from '@/utils/types/metadataRow';
 
 export const NFTItemWrapper = ({
-  item,
+  singleMetadataObject,
   index,
-  metadata,
+  metadataRows,
   validationResponse,
 }: {
-  item: MetadataObject;
+  singleMetadataObject: MetadataObject;
   index: number;
-  metadata: MetadataObject[];
+  metadataRows: MetadataRow[];
   validationResponse: ValidateArrayOfObjectsResult;
 }) => {
   const [activeId, setActiveId] = useState(index);
   const handlePrevious = useCallback(() => setActiveId((oldId) => Math.max(oldId - 1, 0)), []);
-  const handleNext = useCallback(() => setActiveId((oldId) => Math.min(oldId + 1, metadata.length - 1)), [metadata.length]);
+  const handleNext = useCallback(() => setActiveId((oldId) => Math.min(oldId + 1, metadataRows.length - 1)), [metadataRows.length]);
   const validationResult = validationResponse?.results[index];
 
   return (
-    <NFTItem key={index} metadata={item} validationResult={validationResult}>
+    <NFTItem key={index} metadata={singleMetadataObject} validationResult={validationResult}>
       <NFTDetails
-        metadata={metadata[activeId]}
-        metadataLength={metadata.length}
+        metadataObject={metadataRows[activeId].metadata}
+        fileName={metadataRows[activeId].fileName}
+        metadataLength={metadataRows.length}
         activeId={activeId}
         handlePrevious={handlePrevious}
         handleNext={handleNext}

@@ -17,7 +17,7 @@
  * limitations under the License.
  *
  */
-import { MetadataObject, ValidateArrayOfObjectsResult } from 'hedera-nft-utilities';
+import { ValidateArrayOfObjectsResult } from 'hedera-nft-utilities';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useCallback, useEffect, useState } from 'react';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -25,33 +25,35 @@ import { TABLE_HEADERS } from '@/utils/constants/nftTableHeaders';
 import { NFTItemWrapper } from '@/components/pages/DropzonePage/NFTItemWrapper';
 import { countInvalidObjects } from '@/utils/helpers/countInvalidMetadataObjects';
 import { dictionary } from '@/libs/en';
+import { MetadataRow } from '@/utils/types/metadataRow';
 
 const BATCH_SIZE = 10;
 
 interface NFTListProps {
-  metadata: MetadataObject[];
+  metadataRows: MetadataRow[];
   validationResponse: ValidateArrayOfObjectsResult;
 }
 
-export const NFTList = ({ metadata, validationResponse }: NFTListProps) => {
-  const [visibleItems, setVisibleItems] = useState(metadata.slice(0, BATCH_SIZE));
-  const [hasMore, setHasMore] = useState(metadata.length > BATCH_SIZE);
+export const NFTList = ({ metadataRows, validationResponse }: NFTListProps) => {
+  const metadataObjects = metadataRows.map((m) => m.metadata);
+  const [visibleItems, setVisibleItems] = useState(metadataObjects.slice(0, BATCH_SIZE));
+  const [hasMore, setHasMore] = useState(metadataObjects.length > BATCH_SIZE);
 
   useEffect(() => {
-    setVisibleItems(metadata.slice(0, BATCH_SIZE));
-    setHasMore(metadata.length > BATCH_SIZE);
-  }, [metadata]);
+    setVisibleItems(metadataObjects.slice(0, BATCH_SIZE));
+    setHasMore(metadataRows.length > BATCH_SIZE);
+  }, [metadataRows.length]);
 
   const fetchMoreData = useCallback(() => {
-    const nextItemsCount = Math.min(visibleItems.length + BATCH_SIZE, metadata.length);
+    const nextItemsCount = Math.min(visibleItems.length + BATCH_SIZE, metadataRows.length);
 
-    if (visibleItems.length >= metadata.length) {
+    if (visibleItems.length >= metadataRows.length) {
       setHasMore(false);
       return;
     }
 
-    setVisibleItems(metadata.slice(0, nextItemsCount));
-  }, [visibleItems.length, metadata]);
+    setVisibleItems(metadataObjects.slice(0, nextItemsCount));
+  }, [visibleItems.length]);
 
   return (
     <InfiniteScroll dataLength={visibleItems.length} next={fetchMoreData} hasMore={hasMore} loader={<></>}>
@@ -68,7 +70,13 @@ export const NFTList = ({ metadata, validationResponse }: NFTListProps) => {
         </TableHeader>
         <TableBody>
           {visibleItems.map((item, index) => (
-            <NFTItemWrapper key={index} item={item} index={index} metadata={metadata} validationResponse={validationResponse} />
+            <NFTItemWrapper
+              key={index}
+              singleMetadataObject={item}
+              index={index}
+              metadataRows={metadataRows}
+              validationResponse={validationResponse}
+            />
           ))}
         </TableBody>
       </Table>

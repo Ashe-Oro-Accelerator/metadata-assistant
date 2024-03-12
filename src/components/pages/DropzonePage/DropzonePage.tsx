@@ -31,14 +31,16 @@ import { NFTList } from '@/components/pages/DropzonePage/NFTList';
 import { Button } from '@/components/ui/button';
 import { saveMetadataObjectsAsJsonFiles } from '@/utils/helpers/saveMetadataObjectsAsJsonFiles';
 import { generateErrorLog } from '@/utils/helpers/generateErrorLog';
+import { MetadataRow } from '@/utils/types/metadataRow';
 
 export default function DropzonePage() {
   const [files, setFiles] = useState<ExtFile[]>([]);
-  const [metadata, setMetadata] = useState<MetadataObject[]>([]);
+  const [metadata, setMetadata] = useState<MetadataRow[]>([]);
   const [error, setError] = useState<string>('');
   const [validationResponse, setValidationResponse] = useState<ValidateArrayOfObjectsResult | undefined>(undefined);
   const isCSVFile = files[0]?.type?.includes('csv') || files[0]?.name?.endsWith('.csv');
-  const errorLogURL = generateErrorLog(metadata, validationResponse);
+  const metadataObjects = metadata.map((m) => m.metadata);
+  const errorLogURL = generateErrorLog(metadataObjects, validationResponse);
 
   const readFile = async (extFile: ExtFile) => {
     setMetadata([]);
@@ -55,14 +57,16 @@ export default function DropzonePage() {
         return;
       }
 
-      for (const fileName of jsonFiles) {
-        const file = content.file(fileName);
+      for (const fullFileName of jsonFiles) {
+        const fileName = fullFileName.split('/').pop() || '';
+        const file = content.file(fullFileName);
         if (file) {
           const fileData = (await file.async('string')).trim();
 
           try {
             const json = fileData ? (JSON.parse(fileData) as MetadataObject) : {};
-            setMetadata((prevMetadata) => [...prevMetadata, json]);
+            // This sorting is used because ZIP files don't keep files in order, so it makes sure everything is listed alphabetically
+            setMetadata((prevMetadata) => [...prevMetadata, { metadata: json, fileName }].sort((a, b) => (a.fileName < b.fileName ? -1 : 0)));
           } catch (err) {
             console.error(dictionary.errors.parsingError(fileName, err as string));
             setError(formatErrorMessage(err));
@@ -77,19 +81,20 @@ export default function DropzonePage() {
           const text = event.target.result as string;
           try {
             const json = text ? (JSON.parse(text) as MetadataObject) : {};
-            setMetadata([json]);
+            setMetadata([{ metadata: json, fileName: extFile.name! }]);
           } catch (err) {
             console.error(dictionary.errors.parsingError(extFile.name, err as string));
             setError(formatErrorMessage(err));
           }
         } else {
-          setMetadata([{}]);
+          setMetadata([{ metadata: {}, fileName: extFile.name! }]);
         }
       };
     } else if (extFile.file.type.includes('csv') || extFile.file.name.endsWith('.csv')) {
       try {
         const metadataObjects: MetadataObject[] = await convertCSVRowsToMetadataObjects(extFile);
-        setMetadata(metadataObjects.length ? metadataObjects : [{}]);
+        const metadataRows: MetadataRow[] = metadataObjects.map((metadata) => ({ metadata, fileName: extFile.name! }));
+        setMetadata(metadataRows.length ? metadataRows : [{ metadata: {}, fileName: extFile.name! }]);
       } catch (err) {
         console.error(err);
         setError(formatErrorMessage(err));
@@ -112,10 +117,12 @@ export default function DropzonePage() {
 
   useEffect(() => {
     if (metadata.length > 0) {
-      const validationResponse: ValidateArrayOfObjectsResult = Hip412Validator.validateArrayOfObjects(metadata);
+      const validationResponse: ValidateArrayOfObjectsResult = Hip412Validator.validateArrayOfObjects(metadataObjects);
       setValidationResponse(validationResponse);
     }
   }, [metadata]);
+
+  const sortedMetadataRows = metadata.sort((a, b) => a.fileName.localeCompare(b.fileName, undefined, { numeric: true, sensitivity: 'base' }));
 
   return (
     <div className="container mx-auto">
@@ -157,11 +164,12 @@ export default function DropzonePage() {
                   <Button>{dictionary.nftTable.downloadErrorLogButton}</Button>
                 </a>
               )}
-              {isCSVFile && <Button onClick={() => saveMetadataObjectsAsJsonFiles(metadata)}>{dictionary.nftTable.downloadJSONsButton}</Button>}
+              {isCSVFile && (
+                <Button onClick={() => saveMetadataObjectsAsJsonFiles(metadataObjects)}>{dictionary.nftTable.downloadJSONsButton}</Button>
+              )}
             </div>
           </div>
-
-          <NFTList metadata={metadata} validationResponse={validationResponse} />
+          <NFTList metadataRows={sortedMetadataRows} validationResponse={validationResponse} />
         </div>
       )}
     </div>
