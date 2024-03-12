@@ -55,5 +55,7 @@ export const dictionary = {
     attributesTitle: 'Attributes',
     thereAreErrors: 'There are errors',
     nftNumber: 'NFT number',
+    nextButton: 'Next',
+    previousButton: 'Previous',
   },
 } as const;

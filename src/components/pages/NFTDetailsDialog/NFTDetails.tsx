@@ -59,7 +59,7 @@ export const NFTDetails = ({
         </DialogHeader>
         <div className="h-full gap-4 py-4">
           <div className="grid grid-cols-1 items-start md:grid-cols-2 md:items-center">
-            <div className="mb-auto flex hidden flex-col items-center justify-center md:flex">
+            <div className="mb-auto flex hidden flex-col items-center justify-center pr-8 md:flex">
               <ImageWithLoading src={image} alt={dictionary.modal.modalImageAlt} showSkeleton={false} />
               {errorsPresent && (
                 <div className="mt-6 w-full text-red-600">
@@ -77,7 +77,7 @@ export const NFTDetails = ({
                 <p className="mb-2 text-lg font-semibold">{dictionary.modal.descriptionTitle}</p>
                 {description || '-'}
               </div>
-              {attributes && (
+              {attributes?.length > 0 && (
                 <div className="mb-6">
                   <p className="text-lg font-semibold">{dictionary.modal.attributesTitle}</p>
                   <ul className="ml-6 list-disc [&>li]:mt-2">
@@ -93,16 +93,12 @@ export const NFTDetails = ({
           </div>
         </div>
         <DialogFooter className="flex flex-row items-center gap-1">
-          {metadataLength > 1 ? (
-            <>
-              <Button className="w-full md:w-[100px]" disabled={activeId === 0} onClick={handlePrevious}>
-                Previous
-              </Button>
-              <Button className="w-full md:w-[100px]" disabled={activeId === metadataLength - 1} onClick={handleNext}>
-                Next
-              </Button>
-            </>
-          ) : null}
+          <Button className="w-full md:w-[100px]" disabled={activeId === 0} onClick={handlePrevious}>
+            {dictionary.modal.previousButton}
+          </Button>
+          <Button className="w-full md:w-[100px]" disabled={activeId === metadataLength - 1} onClick={handleNext}>
+            {dictionary.modal.nextButton}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
