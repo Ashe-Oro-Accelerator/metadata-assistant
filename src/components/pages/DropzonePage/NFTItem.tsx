@@ -46,6 +46,8 @@ export const NFTItem = ({ metadata, validationResult = { isValid: false, errorsC
         <div className="w-[80px]">
           <ImageWithLoading src={image} alt={name} className="mr-6 max-h-[60px] max-w-[60px]" />
         </div>
+      </TableCell>
+      <TableCell>
         <span className="min-w-[150px]">{truncateString(name, TRUNCATE_NAME_NUMBER) || '-'}</span>
       </TableCell>
       <TableCell className="max-w-[450px]">{truncateString(description, TRUNCATE_DESCRIPTION_NUMBER) || '-'}</TableCell>

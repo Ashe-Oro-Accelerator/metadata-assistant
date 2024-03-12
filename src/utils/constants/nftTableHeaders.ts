@@ -20,6 +20,7 @@
 import { dictionary } from '@/libs/en';
 
 export const TABLE_HEADERS = [
+  dictionary.nftTable.headers.image,
   dictionary.nftTable.headers.name,
   dictionary.nftTable.headers.description,
   dictionary.nftTable.headers.validationStatus,

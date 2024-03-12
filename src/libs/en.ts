@@ -29,6 +29,7 @@ export const dictionary = {
     imageAltText: 'Image of',
     invalidFilesCount: 'Invalid files count',
     headers: {
+      image: 'Image',
       name: 'Name',
       description: 'Description',
       validationStatus: 'Validation status',
@@ -54,8 +55,8 @@ export const dictionary = {
     descriptionTitle: 'Description',
     attributesTitle: 'Attributes',
     thereAreErrors: 'There are errors',
-    nftNumber: 'NFT number',
     nextButton: 'Next',
     previousButton: 'Previous',
+    fileName: 'File name',
   },
 } as const;
