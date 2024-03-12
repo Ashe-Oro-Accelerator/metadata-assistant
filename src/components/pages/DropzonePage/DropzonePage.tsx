@@ -29,12 +29,16 @@ import { convertCSVRowsToMetadataObjects } from '@/utils/helpers/csv-file-reader
 import { formatErrorMessage } from '@/utils/helpers/formatErrorMessage';
 import { NFTList } from '@/components/pages/DropzonePage/NFTList';
 import { Button } from '@/components/ui/button';
+import { saveMetadataObjectsAsJsonFiles } from '@/utils/helpers/saveMetadataObjectsAsJsonFiles';
+import { generateErrorLog } from '@/utils/helpers/generateErrorLog';
 
 export default function DropzonePage() {
   const [files, setFiles] = useState<ExtFile[]>([]);
   const [metadata, setMetadata] = useState<MetadataObject[]>([]);
   const [error, setError] = useState<string>('');
   const [validationResponse, setValidationResponse] = useState<ValidateArrayOfObjectsResult | undefined>(undefined);
+  const isCSVFile = files[0]?.type?.includes('csv') || files[0]?.name?.endsWith('.csv');
+  const errorLogURL = generateErrorLog(metadata, validationResponse);
 
   const readFile = async (extFile: ExtFile) => {
     setMetadata([]);
@@ -110,8 +114,6 @@ export default function DropzonePage() {
     if (metadata.length > 0) {
       const validationResponse: ValidateArrayOfObjectsResult = Hip412Validator.validateArrayOfObjects(metadata);
       setValidationResponse(validationResponse);
-      // console.log('metadata:', metadata);
-      // console.log('validationResponseeeee:', validationResponse);
     }
   }, [metadata]);
 
@@ -149,7 +151,14 @@ export default function DropzonePage() {
               <h3 className="font-semibold">{dictionary.nftTable.title}</h3>
               <p>{dictionary.nftTable.description}</p>
             </div>
-            <Button>{dictionary.nftTable.downloadJSONsButton}</Button>
+            <div className="flex gap-4">
+              {validationResponse && !validationResponse.allObjectsValid && (
+                <a href={errorLogURL} download="error_log.txt" className="button-class">
+                  <Button>{dictionary.nftTable.downloadErrorLogButton}</Button>
+                </a>
+              )}
+              {isCSVFile && <Button onClick={() => saveMetadataObjectsAsJsonFiles(metadata)}>{dictionary.nftTable.downloadJSONsButton}</Button>}
+            </div>
           </div>
 
           <NFTList metadata={metadata} validationResponse={validationResponse} />

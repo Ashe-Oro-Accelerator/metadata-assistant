@@ -24,6 +24,7 @@ export const dictionary = {
     title: 'Validation result',
     description: 'Here is a list of all validated NFTs. Youu can filter them by validation status and number of errors.',
     downloadJSONsButton: 'Download JSONs',
+    downloadErrorLogButton: 'Download error log',
     detailsButton: 'Details',
     imageAltText: 'Image of',
     invalidFilesCount: 'Invalid files count',
