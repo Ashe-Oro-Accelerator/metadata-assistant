@@ -11,10 +11,9 @@ export const processCsvFile = async (extFile: ExtFile): Promise<MetadataRow[]> =
 
   try {
     const metadataObjects: MetadataObject[] = await convertCSVRowsToMetadataObjects(extFile);
-    return metadataObjects.map((metadata) => ({
-      metadata,
-      fileName: extFile.name!,
-    }));
+    const metadataRows: MetadataRow[] = metadataObjects.map((metadata) => ({ metadata, fileName: extFile.name! }));
+    const metadata = metadataRows.length ? metadataRows : [{ metadata: {}, fileName: extFile.name! }];
+    return metadata;
   } catch (err) {
     throw new Error(dictionary.errors.csvFileUpload);
   }
