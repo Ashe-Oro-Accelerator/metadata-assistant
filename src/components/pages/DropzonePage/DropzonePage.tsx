@@ -20,18 +20,18 @@
 import { useEffect, useState } from 'react';
 import { Dropzone, FileMosaic } from '@dropzone-ui/react';
 import type { ExtFile } from '@dropzone-ui/react';
-import type { MetadataObject, ValidateArrayOfObjectsResult } from 'hedera-nft-utilities';
+import type { ValidateArrayOfObjectsResult } from 'hedera-nft-utilities';
 import { Hip412Validator } from 'hedera-nft-utilities/src/hip412-validator';
-import JSZip from 'jszip';
 import { SUPPORTED_FILE_TYPES_ARRAY, supportedFileTypes } from '@/components/pages/DropzonePage/supportedFileTypes';
 import { dictionary } from '@/libs/en';
-import { convertCSVRowsToMetadataObjects } from '@/utils/helpers/csv-file-reader';
-import { formatErrorMessage } from '@/utils/helpers/formatErrorMessage';
 import { NFTList } from '@/components/pages/DropzonePage/NFTList';
 import { Button } from '@/components/ui/button';
 import { saveMetadataObjectsAsJsonFiles } from '@/utils/helpers/saveMetadataObjectsAsJsonFiles';
 import { generateErrorLog } from '@/utils/helpers/generateErrorLog';
 import { MetadataRow } from '@/utils/types/metadataRow';
+import { processZipFile } from '@/components/pages/DropzonePage/processZipFile';
+import { processJsonFile } from '@/components/pages/DropzonePage/processJsonFile';
+import { processCsvFile } from '@/components/pages/DropzonePage/processCSVFile';
 
 export default function DropzonePage() {
   const [files, setFiles] = useState<ExtFile[]>([]);
@@ -48,56 +48,22 @@ export default function DropzonePage() {
 
     if (!extFile.file) return;
     if (extFile.file.type === 'application/zip' || extFile.file.name.endsWith('.zip')) {
-      const zip = new JSZip();
-      const content = await zip.loadAsync(extFile.file);
-      const jsonFiles = Object.keys(content.files).filter((fileName) => fileName.endsWith('.json'));
-
-      if (jsonFiles.length === 0) {
-        setError(dictionary.errors.zipFileWithoutJsonFiles);
-        return;
-      }
-
-      for (const fullFileName of jsonFiles) {
-        const fileName = fullFileName.split('/').pop() || '';
-        const file = content.file(fullFileName);
-        if (file) {
-          const fileData = (await file.async('string')).trim();
-
-          try {
-            const json = fileData ? (JSON.parse(fileData) as MetadataObject) : {};
-            setMetadata((prevMetadata) => [...prevMetadata, { metadata: json, fileName }].sort((a, b) => (a.fileName < b.fileName ? -1 : 0)));
-          } catch (err) {
-            console.error(dictionary.errors.parsingError(fileName, err as string));
-            setError(formatErrorMessage(err));
-          }
+      try {
+        const newMetadata = await processZipFile(extFile);
+        setMetadata(newMetadata);
+      } catch (error) {
+        if (error instanceof Error) {
+          setError(error.message);
         }
       }
     } else if (extFile.file.type === 'application/json' || extFile.file.name.endsWith('.json')) {
-      const reader = new FileReader();
-      reader.readAsText(extFile.file);
-      reader.onload = (event: ProgressEvent<FileReader>) => {
-        if (event.target?.result) {
-          const text = event.target.result as string;
-          try {
-            const json = text ? (JSON.parse(text) as MetadataObject) : {};
-            setMetadata([{ metadata: json, fileName: extFile.name! }]);
-          } catch (err) {
-            console.error(dictionary.errors.parsingError(extFile.name, err as string));
-            setError(formatErrorMessage(err));
-          }
-        } else {
-          setMetadata([{ metadata: {}, fileName: extFile.name! }]);
-        }
-      };
+      processJsonFile(extFile)
+        .then((newMetadata) => setMetadata(newMetadata))
+        .catch((error) => setError(error.message));
     } else if (extFile.file.type.includes('csv') || extFile.file.name.endsWith('.csv')) {
-      try {
-        const metadataObjects: MetadataObject[] = await convertCSVRowsToMetadataObjects(extFile);
-        const metadataRows: MetadataRow[] = metadataObjects.map((metadata) => ({ metadata, fileName: extFile.name! }));
-        setMetadata(metadataRows.length ? metadataRows : [{ metadata: {}, fileName: extFile.name! }]);
-      } catch (err) {
-        console.error(err);
-        setError(formatErrorMessage(err));
-      }
+      processCsvFile(extFile)
+        .then((newMetadata) => setMetadata(newMetadata))
+        .catch((error) => setError(error.message));
     } else {
       setError(dictionary.errors.unsupportedFileType);
       return;
