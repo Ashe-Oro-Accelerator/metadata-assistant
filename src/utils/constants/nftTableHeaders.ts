@@ -17,22 +17,14 @@
  * limitations under the License.
  *
  */
-export type Attribute = {
-  trait_type: string;
-  value: string | number | boolean;
-};
+import { dictionary } from '@/libs/en';
 
-type Properties = {
-  external_url: string;
-  url: string;
-};
-
-export type NFTDetailsType = {
-  name: string;
-  image: string;
-  type: string;
-  creator?: string;
-  description?: string;
-  properties?: Properties;
-  attributes?: Attribute[];
-};
+export const TABLE_HEADERS = [
+  dictionary.nftTable.headers.image,
+  dictionary.nftTable.headers.name,
+  dictionary.nftTable.headers.description,
+  dictionary.nftTable.headers.validationStatus,
+  dictionary.nftTable.headers.errors,
+  // Last header as empty string to keep the hover effect on full width of the headers row
+  '',
+] as const;

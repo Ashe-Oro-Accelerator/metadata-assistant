@@ -17,22 +17,13 @@
  * limitations under the License.
  *
  */
-export type Attribute = {
-  trait_type: string;
-  value: string | number | boolean;
-};
+import { ValidateArrayOfObjectsResult } from 'hedera-nft-utilities';
 
-type Properties = {
-  external_url: string;
-  url: string;
-};
-
-export type NFTDetailsType = {
-  name: string;
-  image: string;
-  type: string;
-  creator?: string;
-  description?: string;
-  properties?: Properties;
-  attributes?: Attribute[];
+export const countInvalidObjects = (validationResponse: ValidateArrayOfObjectsResult): number => {
+  return Object.values(validationResponse.results).reduce((acc, current) => {
+    if (current.errorsCount > 0) {
+      acc += 1;
+    }
+    return acc;
+  }, 0);
 };

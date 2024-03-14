@@ -17,22 +17,12 @@
  * limitations under the License.
  *
  */
-export type Attribute = {
-  trait_type: string;
-  value: string | number | boolean;
-};
+const PUBLIC_IPFS_GATEWAY_ADDRESS = 'https://gateway.pinata.cloud/ipfs/';
 
-type Properties = {
-  external_url: string;
-  url: string;
-};
-
-export type NFTDetailsType = {
-  name: string;
-  image: string;
-  type: string;
-  creator?: string;
-  description?: string;
-  properties?: Properties;
-  attributes?: Attribute[];
+export const getProperImageURL = (url: string): string => {
+  if (url?.startsWith('ipfs://')) {
+    const cidWithPath = url.replace('ipfs://', '');
+    return PUBLIC_IPFS_GATEWAY_ADDRESS + cidWithPath;
+  }
+  return url;
 };

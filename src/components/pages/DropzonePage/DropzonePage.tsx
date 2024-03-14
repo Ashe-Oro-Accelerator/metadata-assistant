@@ -20,19 +20,27 @@
 import { useEffect, useState } from 'react';
 import { Dropzone, FileMosaic } from '@dropzone-ui/react';
 import type { ExtFile } from '@dropzone-ui/react';
-import type { MetadataObject, ValidateArrayOfObjectsResult } from 'hedera-nft-utilities';
+import type { ValidateArrayOfObjectsResult } from 'hedera-nft-utilities';
 import { Hip412Validator } from 'hedera-nft-utilities/src/hip412-validator';
-import JSZip from 'jszip';
 import { SUPPORTED_FILE_TYPES_ARRAY, supportedFileTypes } from '@/components/pages/DropzonePage/supportedFileTypes';
 import { dictionary } from '@/libs/en';
-import { convertCSVRowsToMetadataObjects } from '@/utils/helpers/csv-file-reader';
-import { formatErrorMessage } from '@/utils/helpers/formatErrorMessage';
+import { NFTList } from '@/components/pages/DropzonePage/NFTList';
+import { Button } from '@/components/ui/button';
+import { saveMetadataObjectsAsJsonFiles } from '@/utils/helpers/saveMetadataObjectsAsJsonFiles';
+import { generateErrorLog } from '@/utils/helpers/generateErrorLog';
+import { MetadataRow } from '@/utils/types/metadataRow';
+import { processZipFile } from '@/components/pages/DropzonePage/processZipFile';
+import { processJsonFile } from '@/components/pages/DropzonePage/processJsonFile';
+import { processCsvFile } from '@/components/pages/DropzonePage/processCSVFile';
 
 export default function DropzonePage() {
   const [files, setFiles] = useState<ExtFile[]>([]);
-  const [metadata, setMetadata] = useState<MetadataObject[]>([]);
+  const [metadata, setMetadata] = useState<MetadataRow[]>([]);
   const [error, setError] = useState<string>('');
-  const [validationResponse, setValidationResponse] = useState<ValidateArrayOfObjectsResult>();
+  const [validationResponse, setValidationResponse] = useState<ValidateArrayOfObjectsResult | undefined>(undefined);
+  const isCSVFile = files[0]?.type?.includes('csv') || files[0]?.name?.endsWith('.csv');
+  const metadataObjects = metadata.map((m) => m.metadata);
+  const errorLogURL = generateErrorLog(metadataObjects, validationResponse);
 
   const readFile = async (extFile: ExtFile) => {
     setMetadata([]);
@@ -40,54 +48,22 @@ export default function DropzonePage() {
 
     if (!extFile.file) return;
     if (extFile.file.type === 'application/zip' || extFile.file.name.endsWith('.zip')) {
-      const zip = new JSZip();
-      const content = await zip.loadAsync(extFile.file);
-      const jsonFiles = Object.keys(content.files).filter((fileName) => fileName.endsWith('.json'));
-
-      if (jsonFiles.length === 0) {
-        setError(dictionary.errors.zipFileWithoutJsonFiles);
-        return;
-      }
-
-      for (const fileName of jsonFiles) {
-        const file = content.file(fileName);
-        if (file) {
-          const fileData = (await file.async('string')).trim();
-
-          try {
-            const json = fileData ? (JSON.parse(fileData) as MetadataObject) : {};
-            setMetadata((prevMetadata) => [...prevMetadata, json]);
-          } catch (err) {
-            console.error(dictionary.errors.parsingError(fileName, err as string));
-            setError(formatErrorMessage(err));
-          }
+      try {
+        const newMetadata = await processZipFile(extFile);
+        setMetadata(newMetadata);
+      } catch (error) {
+        if (error instanceof Error) {
+          setError(error.message);
         }
       }
     } else if (extFile.file.type === 'application/json' || extFile.file.name.endsWith('.json')) {
-      const reader = new FileReader();
-      reader.readAsText(extFile.file);
-      reader.onload = (event: ProgressEvent<FileReader>) => {
-        if (event.target?.result) {
-          const text = event.target.result as string;
-          try {
-            const json = text ? (JSON.parse(text) as MetadataObject) : {};
-            setMetadata([json]);
-          } catch (err) {
-            console.error(dictionary.errors.parsingError(extFile.name, err as string));
-            setError(formatErrorMessage(err));
-          }
-        } else {
-          setMetadata([{}]);
-        }
-      };
+      processJsonFile(extFile)
+        .then((newMetadata) => setMetadata(newMetadata))
+        .catch((error) => setError(error.message));
     } else if (extFile.file.type.includes('csv') || extFile.file.name.endsWith('.csv')) {
-      try {
-        const metadataObjects: MetadataObject[] = await convertCSVRowsToMetadataObjects(extFile);
-        setMetadata(metadataObjects.length ? metadataObjects : [{}]);
-      } catch (err) {
-        console.error(err);
-        setError(formatErrorMessage(err));
-      }
+      processCsvFile(extFile)
+        .then((newMetadata) => setMetadata(newMetadata))
+        .catch((error) => setError(error.message));
     } else {
       setError(dictionary.errors.unsupportedFileType);
       return;
@@ -106,18 +82,19 @@ export default function DropzonePage() {
 
   useEffect(() => {
     if (metadata.length > 0) {
-      const validationResponse: ValidateArrayOfObjectsResult = Hip412Validator.validateArrayOfObjects(metadata);
+      const validationResponse: ValidateArrayOfObjectsResult = Hip412Validator.validateArrayOfObjects(metadataObjects);
       setValidationResponse(validationResponse);
-      console.log('metadata:', metadata);
-      console.log('validationResponse:', validationResponse);
     }
   }, [metadata]);
 
+  // This sorting is used because ZIP files don't keep files in order, so it makes sure everything is listed alphabetically
+  const sortedMetadataRows = metadata.sort((a, b) => a.fileName.localeCompare(b.fileName, undefined, { numeric: true, sensitivity: 'base' }));
+
   return (
     <div className="container mx-auto">
-      <h1 className="font-geistVariable mt-20 scroll-m-20 text-center text-3xl font-bold tracking-tight lg:text-6xl">{dictionary.header.title}</h1>
-      <p className="mb-10 text-center text-xl font-medium leading-7 [&:not(:first-child)]:mt-6">{dictionary.header.description}</p>
-      <div className="relative flex flex-col justify-center">
+      <div className="relative mx-auto flex max-w-[600px] flex-col items-center justify-center">
+        <h1 className="mt-20 scroll-m-20 text-center text-4xl font-extrabold tracking-tight lg:text-5xl">{dictionary.header.title}</h1>
+        <p className="mb-10 text-center leading-7 [&:not(:first-child)]:mt-6">{dictionary.header.description}</p>
         <Dropzone
           onChange={updateFilesReplace}
           accept={supportedFileTypes()}
@@ -140,6 +117,27 @@ export default function DropzonePage() {
         </Dropzone>
         {error && <span className="mt-2 text-center font-bold text-red-500">{error}</span>}
       </div>
+      {validationResponse && metadata.length > 0 && (
+        <div className="my-10">
+          <div className="mb-10 flex items-center justify-between px-4">
+            <div>
+              <h3 className="font-semibold">{dictionary.nftTable.title}</h3>
+              <p>{dictionary.nftTable.description}</p>
+            </div>
+            <div className="flex gap-4">
+              {validationResponse && !validationResponse.allObjectsValid && (
+                <a href={errorLogURL} download="error_log.txt" className="button-class">
+                  <Button>{dictionary.nftTable.downloadErrorLogButton}</Button>
+                </a>
+              )}
+              {isCSVFile && (
+                <Button onClick={() => saveMetadataObjectsAsJsonFiles(metadataObjects)}>{dictionary.nftTable.downloadJSONsButton}</Button>
+              )}
+            </div>
+          </div>
+          <NFTList metadataRows={sortedMetadataRows} validationResponse={validationResponse} />
+        </div>
+      )}
     </div>
   );
 }

@@ -17,22 +17,19 @@
  * limitations under the License.
  *
  */
-export type Attribute = {
-  trait_type: string;
-  value: string | number | boolean;
-};
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
+import { MetadataObject } from 'hedera-nft-utilities';
 
-type Properties = {
-  external_url: string;
-  url: string;
-};
+export const saveMetadataObjectsAsJsonFiles = (metadataObjects: MetadataObject[]) => {
+  const zip = new JSZip();
 
-export type NFTDetailsType = {
-  name: string;
-  image: string;
-  type: string;
-  creator?: string;
-  description?: string;
-  properties?: Properties;
-  attributes?: Attribute[];
+  metadataObjects.forEach((obj, index) => {
+    const jsonStr = JSON.stringify(obj, null, 2);
+    zip.file(`${index + 1}.json`, jsonStr);
+  });
+
+  zip.generateAsync({ type: 'blob' }).then((content) => {
+    saveAs(content, 'metadata.zip');
+  });
 };

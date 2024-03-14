@@ -17,22 +17,9 @@
  * limitations under the License.
  *
  */
-export type Attribute = {
-  trait_type: string;
-  value: string | number | boolean;
-};
+import { MetadataObject } from 'hedera-nft-utilities';
 
-type Properties = {
-  external_url: string;
-  url: string;
-};
-
-export type NFTDetailsType = {
-  name: string;
-  image: string;
-  type: string;
-  creator?: string;
-  description?: string;
-  properties?: Properties;
-  attributes?: Attribute[];
-};
+export interface MetadataRow {
+  metadata: MetadataObject;
+  fileName: string;
+}
