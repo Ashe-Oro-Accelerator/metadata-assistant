@@ -40,7 +40,7 @@ export const NFTItemWrapper = ({
   const validationResult = validationResponse?.results[index];
 
   return (
-    <NFTItem key={index} metadata={singleMetadataObject} validationResult={validationResult}>
+    <NFTItem key={index} metadata={singleMetadataObject} validationResult={validationResult} index={index}>
       <NFTDetails
         metadataObject={metadataRows[activeId].metadata}
         fileName={metadataRows[activeId].fileName}

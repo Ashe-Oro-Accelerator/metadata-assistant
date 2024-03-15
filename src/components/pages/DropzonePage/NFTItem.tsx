@@ -20,8 +20,6 @@
 import { DetailedFileValidationResult, MetadataObject } from 'hedera-nft-utilities';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { ImageWithLoading } from '@/components/ui/ImageWithLoading';
-import { getProperImageURL } from '@/utils/helpers/getProperImageURL';
 import { cn } from '@/utils/helpers/cn';
 import { truncateString } from '@/utils/helpers/truncateString';
 
@@ -32,20 +30,18 @@ interface NFTItemProps {
   metadata: MetadataObject;
   validationResult: DetailedFileValidationResult;
   children: React.ReactNode;
+  index: number;
 }
 
-export const NFTItem = ({ metadata, validationResult = { isValid: false, errorsCount: 0, errors: [] }, children }: NFTItemProps) => {
+export const NFTItem = ({ metadata, validationResult = { isValid: false, errorsCount: 0, errors: [] }, children, index }: NFTItemProps) => {
   const { isValid, errorsCount } = validationResult;
   const name = metadata.name as string;
   const description = metadata.description as string;
-  const image = getProperImageURL(metadata.image as string);
 
   return (
     <TableRow>
-      <TableCell className="flex items-center">
-        <div className="w-[80px]">
-          <ImageWithLoading src={image} alt={name} className="mr-6 max-h-[60px] max-w-[60px]" />
-        </div>
+      <TableCell>
+        <span>{index + 1}</span>
       </TableCell>
       <TableCell>
         <span className="min-w-[150px]">{truncateString(name, TRUNCATE_NAME_NUMBER) || '-'}</span>
