@@ -17,23 +17,31 @@
  * limitations under the License.
  *
  */
-import { MetadataObject, ValidateArrayOfObjectsResult } from 'hedera-nft-utilities';
+import { MetadataRow } from '@/utils/types/metadataRow';
+import type { ExtFile } from '@dropzone-ui/react';
+import { ValidateArrayOfObjectsResult } from 'hedera-nft-utilities';
 
-export const generateErrorLog = (metadata: MetadataObject[], validationResponse: ValidateArrayOfObjectsResult | undefined): string => {
+export const generateErrorLog = (
+  metadata: MetadataRow[],
+  validationResponse: ValidateArrayOfObjectsResult | undefined,
+  extFile: ExtFile,
+): string | undefined => {
+  if (!extFile || !extFile.file) return;
   let errorLog = '';
+  const isCSV = extFile.file.type.includes('csv') || extFile.file.name.endsWith('.csv');
 
   if (validationResponse) {
     Object.entries(validationResponse.results).forEach(([index, result]) => {
       if (!result.isValid) {
         const formattedErrors = result.errors.map((error) => `- ${error}`).join('\n');
-        const metadataName = metadata[+index]?.name || `-`;
-        errorLog += `Index: ${+index + 1}\nName: ${metadataName}\nErrors:\n${formattedErrors}\n\n`;
+        const identifier = isCSV ? `Index: ${+index + 1}` : `File Name: ${metadata[+index]?.fileName || `-`}`;
+
+        errorLog += `${identifier}\nErrors:\n${formattedErrors}\n\n`;
       }
     });
   }
 
   const blob = new Blob([errorLog], { type: 'text/plain' });
   const errorLogURL = URL.createObjectURL(blob);
-
   return errorLogURL;
 };

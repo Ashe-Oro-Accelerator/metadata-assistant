@@ -40,7 +40,9 @@ export default function DropzonePage() {
   const [validationResponse, setValidationResponse] = useState<ValidateArrayOfObjectsResult | undefined>(undefined);
   const isCSVFile = files[0]?.type?.includes('csv') || files[0]?.name?.endsWith('.csv');
   const metadataObjects = metadata.map((m) => m.metadata);
-  const errorLogURL = generateErrorLog(metadataObjects, validationResponse);
+  // This sorting is used because ZIP files don't keep files in order, so it makes sure everything is listed alphabetically
+  const sortedMetadataRows = metadata.sort((a, b) => a.fileName.localeCompare(b.fileName, undefined, { numeric: true, sensitivity: 'base' }));
+  const errorLogURL = generateErrorLog(metadata, validationResponse, files[0]);
 
   const readFile = async (extFile: ExtFile) => {
     setMetadata([]);
@@ -86,9 +88,6 @@ export default function DropzonePage() {
       setValidationResponse(validationResponse);
     }
   }, [metadata]);
-
-  // This sorting is used because ZIP files don't keep files in order, so it makes sure everything is listed alphabetically
-  const sortedMetadataRows = metadata.sort((a, b) => a.fileName.localeCompare(b.fileName, undefined, { numeric: true, sensitivity: 'base' }));
 
   return (
     <div className="container mx-auto">
