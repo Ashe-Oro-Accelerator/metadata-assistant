@@ -29,6 +29,7 @@ export const dictionary = {
     imageAltText: 'Image of',
     invalidFilesCount: 'Invalid files count',
     headers: {
+      number: 'No.',
       image: 'Image',
       name: 'Name',
       description: 'Description',
