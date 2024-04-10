@@ -1,4 +1,4 @@
-# Metadata Assistant
+# Metadata Validator
 
 This application serves as a tool to assist with NFT metadata validation and conversion, offering a dropzone for uploading files in three formats:
 

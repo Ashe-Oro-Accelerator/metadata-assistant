@@ -1,6 +1,6 @@
 /*-
  *
- * Hedera Metadata Assistant
+ * Hedera Metadata Validator
  *
  * Copyright (C) 2024 Hedera Hashgraph, LLC
  *
@@ -18,18 +18,25 @@
  *
  */
 export const dictionary = {
-  header: { title: 'Metadata Assistant', description: 'Upload either a CSV file or a directory of JSONs...' },
+  header: {
+    title: 'Metadata Validator',
+    description: 'Validate all of the NFT Collection metadata to ensure it will be displayed correctly in wallets, marketplaces and explorers.',
+    prompt: 'Upload a CSV file, individual JSON, or a ZIP containing JSON files.',
+    downloadExamples: 'Download examples',
+    downloadCSVTemplate: 'Download CSV template',
+    jsonValidationInfo: 'JSON files are validated against',
+    hip412standard: 'HIP-412 standard',
+  },
   dropzone: { description: 'Upload a file' },
   nftTable: {
     title: 'Validation result',
-    description: 'Here is a list of all validated NFTs. Youu can filter them by validation status and number of errors.',
-    downloadJSONsButton: 'Download JSONs',
+    downloadJSONsButton: 'Download converted JSONs',
     downloadErrorLogButton: 'Download error log',
     detailsButton: 'Details',
     imageAltText: 'Image of',
-    invalidFilesCount: 'Invalid files count',
+    invalidFilesCount: 'Invalid files',
     headers: {
-      number: 'No.',
+      number: '#',
       image: 'Image',
       name: 'Name',
       description: 'Description',
