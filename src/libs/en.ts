@@ -23,6 +23,9 @@ export const dictionary = {
     description: 'Validate all of the NFT Collection metadata to ensure it will be displayed correctly in wallets, marketplaces and explorers.',
     prompt: 'Upload a CSV file, individual JSON, or a ZIP containing JSON files.',
     downloadExamples: 'Download examples',
+    downloadCSVTemplate: 'Download CSV template',
+    jsonValidationInfo: 'JSON files are validated against',
+    hip412standard: 'HIP-412 standard',
   },
   dropzone: { description: 'Upload a file' },
   nftTable: {

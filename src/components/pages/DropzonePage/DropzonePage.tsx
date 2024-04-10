@@ -94,10 +94,26 @@ export default function DropzonePage() {
       <div className="relative mx-auto flex max-w-[600px] flex-col items-center justify-center">
         <h1 className="mt-20 scroll-m-20 text-center text-4xl font-extrabold tracking-tight lg:text-5xl">{dictionary.header.title}</h1>
         <p className="text-center leading-7 [&:not(:first-child)]:mt-6">{dictionary.header.description}</p>
-        <p className="mb-8 text-center leading-7 [&:not(:first-child)]:mt-6">{dictionary.header.prompt}</p>
-        <a href="/examples/examples.zip" download="examples.zip" className="mb-10">
-          <Button>{dictionary.header.downloadExamples}</Button>
-        </a>
+        <p className="my-8 font-semibold">
+          {dictionary.header.jsonValidationInfo}{' '}
+          <a
+            href="https://hips.hedera.com/hip/hip-412"
+            target="_blank"
+            rel="noreferrer"
+            className="underline transition duration-200 hover:text-slate-600"
+          >
+            {dictionary.header.hip412standard}
+          </a>
+        </p>
+        <div className="mx-auto flex w-full justify-center gap-6">
+          <a href="/examples/examples.zip" download="examples.zip">
+            <Button className="w-[200px]">{dictionary.header.downloadExamples}</Button>
+          </a>
+          <a href="/templates/csv-template.csv" download="csv-template.csv">
+            <Button className="w-[200px]">{dictionary.header.downloadCSVTemplate}</Button>
+          </a>
+        </div>
+        <p className="mb-4 text-center leading-7 [&:not(:first-child)]:mt-6">{dictionary.header.prompt}</p>
         <Dropzone
           onChange={updateFilesReplace}
           accept={supportedFileTypes()}
