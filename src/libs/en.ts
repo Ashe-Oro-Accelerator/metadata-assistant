@@ -22,6 +22,7 @@ export const dictionary = {
     title: 'Metadata Validator',
     description: 'Validate all of the NFT Collection metadata to ensure it will be displayed correctly in wallets, marketplaces and explorers.',
     prompt: 'Upload a CSV file, individual JSON, or a ZIP containing JSON files.',
+    downloadExamples: 'Download examples',
   },
   dropzone: { description: 'Upload a file' },
   nftTable: {
