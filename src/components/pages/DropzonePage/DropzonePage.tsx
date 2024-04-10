@@ -1,6 +1,6 @@
 /*-
  *
- * Hedera Metadata Assistant
+ * Hedera Metadata Validator
  *
  * Copyright (C) 2024 Hedera Hashgraph, LLC
  *
@@ -93,7 +93,8 @@ export default function DropzonePage() {
     <div className="container mx-auto">
       <div className="relative mx-auto flex max-w-[600px] flex-col items-center justify-center">
         <h1 className="mt-20 scroll-m-20 text-center text-4xl font-extrabold tracking-tight lg:text-5xl">{dictionary.header.title}</h1>
-        <p className="mb-10 text-center leading-7 [&:not(:first-child)]:mt-6">{dictionary.header.description}</p>
+        <p className="text-center leading-7 [&:not(:first-child)]:mt-6">{dictionary.header.description}</p>
+        <p className="mb-10 text-center leading-7 [&:not(:first-child)]:mt-6">{dictionary.header.prompt}</p>
         <Dropzone
           onChange={updateFilesReplace}
           accept={supportedFileTypes()}
@@ -120,8 +121,7 @@ export default function DropzonePage() {
         <div className="my-10">
           <div className="mb-10 flex items-center justify-between px-4">
             <div>
-              <h3 className="font-semibold">{dictionary.nftTable.title}</h3>
-              <p>{dictionary.nftTable.description}</p>
+              <h3 className="font-semibold text-2xl">{dictionary.nftTable.title}</h3>
             </div>
             <div className="flex gap-4">
               {validationResponse && !validationResponse.allObjectsValid && (

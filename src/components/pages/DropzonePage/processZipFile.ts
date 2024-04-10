@@ -1,6 +1,6 @@
 /*-
  *
- * Hedera Metadata Assistant
+ * Hedera Metadata Validator
  *
  * Copyright (C) 2024 Hedera Hashgraph, LLC
  *

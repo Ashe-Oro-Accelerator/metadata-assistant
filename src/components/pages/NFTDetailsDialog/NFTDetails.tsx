@@ -1,6 +1,6 @@
 /*-
  *
- * Hedera Metadata Assistant
+ * Hedera Metadata Validator
  *
  * Copyright (C) 2024 Hedera Hashgraph, LLC
  *
@@ -74,6 +74,7 @@ export const NFTDetails = ({
               )}
             </div>
             <div className="mb-auto flex flex-col">
+              <p>#{activeId + 1}</p>
               <h2 className="mb-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0 md:mb-20">{name || '-'}</h2>
               <div className="mb-10 flex items-center justify-center md:hidden">
                 <ImageWithLoading src={image} alt={dictionary.modal.modalImageAlt} showSkeleton={false} />
