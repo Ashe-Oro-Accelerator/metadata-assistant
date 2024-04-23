@@ -66,7 +66,7 @@ export const NFTDetails = ({
         <div className="h-full gap-4 py-4">
           <div className="grid grid-cols-1 items-start md:grid-cols-2 md:items-center">
             <div className="mb-auto flex hidden flex-col items-center justify-center pr-8 md:flex">
-              <ImageWithLoading src={image} alt={dictionary.modal.modalImageAlt} showSkeleton={false} />
+              <ImageWithLoading image={image} alt={dictionary.modal.modalImageAlt} showSkeleton={true} />
               {errorsPresent && (
                 <div className="mt-6 w-full text-red-600">
                   <h3 className="font-semibold text-black">{dictionary.modal.thereAreErrors}:</h3>
@@ -78,7 +78,7 @@ export const NFTDetails = ({
               <p>#{activeId + 1}</p>
               <h2 className="mb-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0 md:mb-20">{name || '-'}</h2>
               <div className="mb-10 flex items-center justify-center md:hidden">
-                <ImageWithLoading src={image} alt={dictionary.modal.modalImageAlt} showSkeleton={false} />
+                <ImageWithLoading image={image} alt={dictionary.modal.modalImageAlt} showSkeleton={true} />
               </div>
               <div className="mb-6">
                 <p className="mb-2 text-lg font-bold">{dictionary.modal.descriptionTitle}</p>
