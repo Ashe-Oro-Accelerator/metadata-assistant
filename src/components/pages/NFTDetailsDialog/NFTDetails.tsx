@@ -18,7 +18,7 @@
  *
  */
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/components/ui/dialog';
 import { ImageWithLoading } from '@/components/ui/ImageWithLoading';
 import { dictionary } from '@/libs/en';
 import { MetadataObject, ValidateArrayOfObjectsResult } from 'hedera-nft-utilities';
@@ -34,6 +34,8 @@ export const NFTDetails = ({
   handlePrevious,
   handleNext,
   validationResponse,
+  isModalOpen,
+  setIsModalOpen,
 }: {
   metadataObject: MetadataObject;
   fileName: string;
@@ -42,6 +44,8 @@ export const NFTDetails = ({
   handlePrevious: () => void;
   handleNext: () => void;
   validationResponse: ValidateArrayOfObjectsResult;
+  isModalOpen: boolean;
+  setIsModalOpen: (_isOpen: boolean) => void;
 }) => {
   const name = metadataObject?.name as string;
   const description = metadataObject?.description as string;
@@ -51,10 +55,7 @@ export const NFTDetails = ({
   const errorsPresent = !validationResult?.isValid;
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="link">{dictionary.modal.details}</Button>
-      </DialogTrigger>
+    <Dialog onOpenChange={setIsModalOpen} open={isModalOpen}>
       <DialogContent className="flex max-h-screen max-w-[1300px] flex-col justify-center md:h-[900px]">
         <DialogHeader>
           <DialogTitle>

@@ -23,7 +23,7 @@ export const getProperImageURL = (url: string): string => {
   if (url?.startsWith('ipfs://')) {
     const cidWithPath = url.replace('ipfs://', '');
     return PUBLIC_IPFS_GATEWAY_ADDRESS + cidWithPath;
-  } else if (url.match(/^Qm[a-zA-Z0-9]{44}$/)) {
+  } else if (url?.match(/^Qm[a-zA-Z0-9]{44}$/)) {
     return PUBLIC_IPFS_GATEWAY_ADDRESS + url;
   }
   return url;

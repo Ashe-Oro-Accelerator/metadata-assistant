@@ -22,6 +22,7 @@ import { TableCell, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/utils/helpers/cn';
 import { truncateString } from '@/utils/helpers/truncateString';
+import { dictionary } from '@/libs/en';
 
 const TRUNCATE_NAME_NUMBER = 30;
 const TRUNCATE_DESCRIPTION_NUMBER = 180;
@@ -29,11 +30,11 @@ const TRUNCATE_DESCRIPTION_NUMBER = 180;
 interface NFTItemProps {
   metadata: MetadataObject;
   validationResult: DetailedFileValidationResult;
-  children: React.ReactNode;
   index: number;
+  setIsModalOpen: (_isOpen: boolean) => void;
 }
 
-export const NFTItem = ({ metadata, validationResult = { isValid: false, errorsCount: 0, errors: [] }, children, index }: NFTItemProps) => {
+export const NFTItem = ({ metadata, validationResult = { isValid: false, errorsCount: 0, errors: [] }, setIsModalOpen, index }: NFTItemProps) => {
   const { isValid, errorsCount } = validationResult;
   const name = metadata.name as string;
   const description = metadata.description as string;
@@ -56,7 +57,9 @@ export const NFTItem = ({ metadata, validationResult = { isValid: false, errorsC
         </Badge>
       </TableCell>
       <TableCell>{errorsCount}</TableCell>
-      <TableCell className="ml-auto text-right">{children}</TableCell>
+      <TableCell onClick={() => setIsModalOpen(true)} className="ml-auto cursor-pointer py-5 text-right font-semibold hover:underline">
+        {dictionary.modal.details}
+      </TableCell>
     </TableRow>
   );
 };
