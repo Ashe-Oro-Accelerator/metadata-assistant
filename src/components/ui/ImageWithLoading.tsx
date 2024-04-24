@@ -21,42 +21,56 @@ import { useEffect, useState } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export const ImageWithLoading = ({
-  src,
+  image,
   alt,
   className,
   showSkeleton = true,
 }: {
-  src: string;
+  image: string;
   alt: string;
   className?: string;
   showSkeleton?: boolean;
 }) => {
   const [isLoading, setIsLoading] = useState(true);
+  console.log('isLoading:', isLoading);
   const [error, setError] = useState(false);
+  console.log('error:', error);
 
   useEffect(() => {
-    setIsLoading(true);
-    setError(false);
-
-    if (!src) {
+    if (!image) {
       setError(true);
       setIsLoading(false);
       return;
     }
 
-    const img = new Image();
-    img.src = src;
-    img.onload = () => {
-      setIsLoading(false);
-      setError(false);
-    };
-    img.onerror = () => {
-      setError(true);
-      setIsLoading(false);
-    };
-  }, [src]);
+    let isActive = true;
 
-  const displayPlaceholderImage = !isLoading && error;
+    const loadImage = () => {
+      setIsLoading(true);
+      setError(false);
+
+      const img = new Image();
+      img.src = image;
+      img.onload = () => {
+        if (isActive) {
+          setIsLoading(false);
+          setError(false);
+        }
+      };
+      img.onerror = () => {
+        if (isActive) {
+          setError(true);
+          setIsLoading(false);
+        }
+      };
+    };
+
+    loadImage();
+
+    return () => {
+      isActive = false;
+    };
+  }, [image]);
 
   return (
     <>
@@ -65,7 +79,7 @@ export const ImageWithLoading = ({
           <Skeleton className="h-full w-full rounded-xl" />
         </div>
       )}
-      <img className={`max-h-[400px] ${className}`} src={displayPlaceholderImage ? 'no-image-placeholder.webp' : src} alt={alt} />
+      {!isLoading && <img className={`max-h-[400px] ${className}`} src={error ? 'no-image-placeholder.webp' : image} alt={alt} />}{' '}
     </>
   );
 };
