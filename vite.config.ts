@@ -1,13 +1,18 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import * as path from 'path';
+import path from 'path';
+import inject from '@rollup/plugin-inject';
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()], 
+  plugins: [react()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      '@': path.resolve(__dirname, 'src'),
+    },
+  },
+  build: {
+    rollupOptions: {
+      plugins: [inject({ Buffer: ['Buffer', 'Buffer'] })],
     },
   },
 });

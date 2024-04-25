@@ -11,15 +11,16 @@
   },
   "dependencies": {
     "@dropzone-ui/react": "^7.0.4",
+    "@hashgraph/hedera-nft-sdk": "^3.0.7",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-slot": "^1.0.2",
     "@tanstack/react-query": "5.24.1",
+    "buffer": "^6.0.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "file-saver": "^2.0.5",
     "file-type": "^19.0.0",
-    "hedera-nft-utilities": "../hedera-nft-utilities",
     "jszip": "^3.10.1",
     "lucide-react": "^0.341.0",
     "next-themes": "^0.2.1",
@@ -32,6 +33,7 @@
     "vite-tsconfig-paths": "^4.2.1"
   },
   "devDependencies": {
+    "@rollup/plugin-inject": "^5.0.5",
     "@tanstack/eslint-plugin-query": "^5.8.4",
     "@types/file-saver": "^2.0.7",
     "@types/node": "^20.11.20",

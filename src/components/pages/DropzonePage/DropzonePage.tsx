@@ -20,8 +20,8 @@
 import { useEffect, useState } from 'react';
 import { Dropzone, FileMosaic } from '@dropzone-ui/react';
 import type { ExtFile } from '@dropzone-ui/react';
-import type { ValidateArrayOfObjectsResult } from 'hedera-nft-utilities';
-import { Hip412Validator } from 'hedera-nft-utilities/src/hip412-validator';
+import type { ValidateArrayOfObjectsResult } from '@hashgraph/hedera-nft-sdk';
+import { TokenMetadataValidator } from '@hashgraph/hedera-nft-sdk';
 import { SUPPORTED_FILE_TYPES_ARRAY, supportedFileTypes } from '@/components/pages/DropzonePage/supportedFileTypes';
 import { dictionary } from '@/libs/en';
 import { NFTList } from '@/components/pages/DropzonePage/NFTList';
@@ -84,7 +84,7 @@ export default function DropzonePage() {
 
   useEffect(() => {
     if (metadata.length > 0) {
-      const validationResponse: ValidateArrayOfObjectsResult = Hip412Validator.validateArrayOfObjects(metadataObjects);
+      const validationResponse: ValidateArrayOfObjectsResult = TokenMetadataValidator.validateArrayOfObjects(metadataObjects);
       setValidationResponse(validationResponse);
     }
   }, [metadata]);

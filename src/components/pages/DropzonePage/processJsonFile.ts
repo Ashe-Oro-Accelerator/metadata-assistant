@@ -20,7 +20,7 @@
 import { dictionary } from '@/libs/en';
 import type { MetadataRow } from '@/utils/types/metadataRow';
 import type { ExtFile } from '@dropzone-ui/react';
-import type { MetadataObject } from 'hedera-nft-utilities';
+import type { MetadataObject } from '@hashgraph/hedera-nft-sdk';
 
 export const processJsonFile = (extFile: ExtFile): Promise<MetadataRow[]> => {
   return new Promise((resolve, reject) => {

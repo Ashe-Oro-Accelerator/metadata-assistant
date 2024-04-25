@@ -17,7 +17,7 @@
  * limitations under the License.
  *
  */
-import { MetadataObject } from 'hedera-nft-utilities';
+import { MetadataObject } from '@hashgraph/hedera-nft-sdk';
 
 export interface MetadataRow {
   metadata: MetadataObject;

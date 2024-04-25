@@ -18,8 +18,8 @@
  *
  */
 import type { ExtFile } from '@dropzone-ui/react';
-import type { MetadataObject, CSVRow } from 'hedera-nft-utilities';
-import { prepareMetadataObjectsFromCSVRows } from 'hedera-nft-utilities/src/file-management/prepare-metadata-objects-from-csv-rows';
+import type { MetadataObject, CSVRow } from '@hashgraph/hedera-nft-sdk';
+import { prepareMetadataObjectsFromCSVRows } from '@hashgraph/hedera-nft-sdk';
 import Papa from 'papaparse';
 import { dictionary } from '@/libs/en';
 import { formatErrorMessage } from '@/utils/helpers/formatErrorMessage';

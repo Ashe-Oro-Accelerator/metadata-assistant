@@ -19,7 +19,7 @@
  */
 import { MetadataRow } from '@/utils/types/metadataRow';
 import type { ExtFile } from '@dropzone-ui/react';
-import { ValidateArrayOfObjectsResult } from 'hedera-nft-utilities';
+import { ValidateArrayOfObjectsResult } from '@hashgraph/hedera-nft-sdk';
 
 export const generateErrorLog = (
   metadata: MetadataRow[],
