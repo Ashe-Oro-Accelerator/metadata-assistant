@@ -20,8 +20,8 @@
 import { useEffect, useState } from 'react';
 import { Dropzone, FileMosaic } from '@dropzone-ui/react';
 import type { ExtFile } from '@dropzone-ui/react';
-import type { ValidateArrayOfObjectsResult } from 'hedera-nft-utilities';
-import { Hip412Validator } from 'hedera-nft-utilities/src/hip412-validator';
+import type { ValidateArrayOfObjectsResult } from 'hedera-nft-utilities/src/types/hip412-validator'; 
+import { TokenMetadataValidator  } from 'hedera-nft-utilities/src/token-metadata-validator';
 import { SUPPORTED_FILE_TYPES_ARRAY, supportedFileTypes } from '@/components/pages/DropzonePage/supportedFileTypes';
 import { dictionary } from '@/libs/en';
 import { NFTList } from '@/components/pages/DropzonePage/NFTList';
@@ -84,7 +84,7 @@ export default function DropzonePage() {
 
   useEffect(() => {
     if (metadata.length > 0) {
-      const validationResponse: ValidateArrayOfObjectsResult = Hip412Validator.validateArrayOfObjects(metadataObjects);
+      const validationResponse: ValidateArrayOfObjectsResult = TokenMetadataValidator.validateArrayOfObjects(metadataObjects);
       setValidationResponse(validationResponse);
     }
   }, [metadata]);
@@ -95,7 +95,7 @@ export default function DropzonePage() {
         <h1 className="mt-20 scroll-m-20 text-center text-4xl font-extrabold tracking-tight lg:text-5xl">{dictionary.header.title}</h1>
         <p className="text-center leading-7 [&:not(:first-child)]:mt-6">{dictionary.header.description}</p>
         <p className="my-8 font-semibold">
-          {dictionary.header.jsonValidationInfo}{' '}
+          {dictionary.header.jsonValidationInfo}{' '} 
           <a
             href="https://hips.hedera.com/hip/hip-412"
             target="_blank"

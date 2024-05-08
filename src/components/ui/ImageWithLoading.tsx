@@ -32,9 +32,7 @@ export const ImageWithLoading = ({
   showSkeleton?: boolean;
 }) => {
   const [isLoading, setIsLoading] = useState(true);
-  console.log('isLoading:', isLoading);
   const [error, setError] = useState(false);
-  console.log('error:', error);
 
   useEffect(() => {
     if (!image) {
