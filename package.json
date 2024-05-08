@@ -19,7 +19,7 @@
     "clsx": "^2.1.0",
     "file-saver": "^2.0.5",
     "file-type": "^19.0.0",
-    "hedera-nft-utilities": "../hedera-nft-utilities",
+    "hedera-nft-utilities": "../hedera-nft-sdk",
     "jszip": "^3.10.1",
     "lucide-react": "^0.341.0",
     "next-themes": "^0.2.1",
