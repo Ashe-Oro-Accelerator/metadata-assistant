@@ -20,7 +20,7 @@
 import { NFTItem } from '@/components/pages/DropzonePage/NFTItem';
 import { useCallback, useEffect, useState } from 'react';
 import { NFTDetails } from '@/components/pages/NFTDetailsDialog/NFTDetails';
-import { MetadataObject, ValidateArrayOfObjectsResult } from 'hedera-nft-utilities';
+import { MetadataObject, ValidateArrayOfObjectsResult } from '@hashgraph/hedera-nft-sdk';
 import { MetadataRow } from '@/utils/types/metadataRow';
 
 export const NFTItemWrapper = ({

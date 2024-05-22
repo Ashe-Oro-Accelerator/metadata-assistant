@@ -21,7 +21,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/components/ui/dialog';
 import { ImageWithLoading } from '@/components/ui/ImageWithLoading';
 import { dictionary } from '@/libs/en';
-import { MetadataObject, ValidateArrayOfObjectsResult } from 'hedera-nft-utilities';
+import { MetadataObject, ValidateArrayOfObjectsResult } from '@hashgraph/hedera-nft-sdk';
 import { Attribute } from '@/utils/types/nftDetails';
 import { getProperImageURL } from '@/utils/helpers/getProperImageURL';
 import { DialogTitle } from '@radix-ui/react-dialog';
