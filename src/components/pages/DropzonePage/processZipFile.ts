@@ -20,7 +20,7 @@
 import { dictionary } from '@/libs/en';
 import { MetadataRow } from '@/utils/types/metadataRow';
 import type { ExtFile } from '@dropzone-ui/react';
-import { MetadataObject } from 'hedera-nft-utilities';
+import { MetadataObject } from '@hashgraph/hedera-nft-sdk';
 import JSZip from 'jszip';
 
 export async function processZipFile(extFile: ExtFile): Promise<MetadataRow[]> {

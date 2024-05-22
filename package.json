@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@dropzone-ui/react": "^7.0.4",
+    "@hashgraph/hedera-nft-sdk": "^3.1.2",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-slot": "^1.0.2",
@@ -19,7 +20,6 @@
     "clsx": "^2.1.0",
     "file-saver": "^2.0.5",
     "file-type": "^19.0.0",
-    "hedera-nft-utilities": "../hedera-nft-sdk",
     "jszip": "^3.10.1",
     "lucide-react": "^0.341.0",
     "next-themes": "^0.2.1",

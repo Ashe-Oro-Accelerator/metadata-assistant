@@ -20,8 +20,8 @@
 import { useEffect, useState } from 'react';
 import { Dropzone, FileMosaic } from '@dropzone-ui/react';
 import type { ExtFile } from '@dropzone-ui/react';
-import type { ValidateArrayOfObjectsResult } from 'hedera-nft-utilities/src/types/hip412-validator'; 
-import { TokenMetadataValidator  } from 'hedera-nft-utilities/src/token-metadata-validator';
+import type { ValidateArrayOfObjectsResult } from '@hashgraph/hedera-nft-sdk'; 
+import { TokenMetadataValidator  } from '@hashgraph/hedera-nft-sdk';
 import { SUPPORTED_FILE_TYPES_ARRAY, supportedFileTypes } from '@/components/pages/DropzonePage/supportedFileTypes';
 import { dictionary } from '@/libs/en';
 import { NFTList } from '@/components/pages/DropzonePage/NFTList';

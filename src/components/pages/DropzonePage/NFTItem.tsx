@@ -17,7 +17,7 @@
  * limitations under the License.
  *
  */
-import { DetailedFileValidationResult, MetadataObject } from 'hedera-nft-utilities';
+import { DetailedFileValidationResult, MetadataObject } from '@hashgraph/hedera-nft-sdk';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/utils/helpers/cn';

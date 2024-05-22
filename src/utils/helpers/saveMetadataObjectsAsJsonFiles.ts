@@ -19,7 +19,7 @@
  */
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
-import { MetadataObject } from 'hedera-nft-utilities';
+import { MetadataObject } from '@hashgraph/hedera-nft-sdk';
 
 export const saveMetadataObjectsAsJsonFiles = (metadataObjects: MetadataObject[]) => {
   const zip = new JSZip();
