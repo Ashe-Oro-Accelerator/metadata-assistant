@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@42zeroo/tescik": "^1.1.194-ajv",
     "@dropzone-ui/react": "^7.0.4",
     "@hashgraph/hedera-nft-sdk": "^3.1.2",
     "@radix-ui/react-dialog": "^1.0.5",
